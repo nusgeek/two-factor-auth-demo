@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign in page</title>
+    <link rel="stylesheet" href="all.css">
+</head>
+<body>
+<h1>Two-Step Verification</h1>
+<p>Enter the 6-digit code from your authenticator app into the code field</p>
+<form method="post" action="/verify-totp">
+    <div>
+        <label>Code</label>
+        <input type="text" placeholder="6 digits" name="code"/>
+    </div>
+    <div>
+        <input type="submit" value="Verify"/>
+    </div>
+</form>
+</body>
+</html>

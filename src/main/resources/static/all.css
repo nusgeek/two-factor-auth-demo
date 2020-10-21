@@ -1,0 +1,10 @@
+body {
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+input {
+    margin: 5px 0px 10px 0px;
+}
+
+.reminder { color: red; }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up page</title>
+    <link rel="stylesheet" href="all.css">
+</head>
+<body>
+<h1>Sign Up</h1>
+<form method="post" action="/signup">
+    <div>
+        <label>Username</label><br>
+        <input type="text" placeholder="Your email" name="username"/>
+        <span th:text="${status}" class="reminder"></span>
+    </div>
+    <div>
+        <label>Password</label><br>
+        <input type="Password" placeholder="Password" name="password"/>
+        <span th:text="${password}" class="reminder"></span>
+    </div>
+    <div>
+        <label>Role name</label><br>
+        <input type="text" placeholder="role name" name="role_name" /><br>
+        <label>Self introduction</label><br>
+        <textarea type="text" placeholder="Self introduction" name="detail" rows="6" cols="22"></textarea>
+    </div>
+    <input type="checkbox"  name="totp" class="checkBox" id="checkbox"/>
+    <input type="hidden" name="totp" value="false">
+    <label for="checkbox">Turn on two-factor authentication</label><br>
+    <div>
+        <input type="submit" value="Sign up"/>
+    </div>
+</form>
+</body>
+</html>

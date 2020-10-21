@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign in page</title>
+    <link rel="stylesheet" href="all.css">
+</head>
+<body>
+<h1>Additional Security Verification</h1>
+<p class="reminder">
+    You entered an invalid security code previously.Please enter 6-digit consecutively to verify.
+</p>
+<form method="post" action="/verify-totp-additional-security">
+    <div>
+        <label for="code1">1st Code: </label>
+        <input type="text" name="code1" id="code1" /><br>
+        <label for="code2">2nd Code:</label>
+        <input type="text" name="code2" id="code2" /><br>
+        <label for="code3">3rd Code:</label>
+        <input type="text" name="code3" id="code3" />
+    </div>
+    <div>
+        <input type="submit" value="Verify"/>
+    </div>
+</form>
+</body>
+</html>

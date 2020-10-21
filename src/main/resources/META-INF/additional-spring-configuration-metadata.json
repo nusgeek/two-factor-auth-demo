@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "quartz.job.auto.email.cron.expression",
+      "type": "java.lang.String",
+      "description": "Description for quartz.job.auto.email.cron.expression."
+  }
+] }
