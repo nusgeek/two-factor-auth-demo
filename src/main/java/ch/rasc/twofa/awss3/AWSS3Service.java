@@ -2,8 +2,9 @@ package ch.rasc.twofa.awss3;
 
     import java.io.File;
 import java.util.List;
+    import java.util.Map;
 
-import com.amazonaws.services.s3.AmazonS3;
+    import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.CopyObjectResult;
@@ -50,6 +51,10 @@ public class AWSS3Service {
         return s3client.putObject(bucketName, key, file);
     }
 
+    // uploading objects
+    public Map<String, PutObjectResult> putObjects(String bucketName, Map<String, File> map) {
+
+    }
 
 
     //listing objects
