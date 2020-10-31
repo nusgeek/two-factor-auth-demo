@@ -6,10 +6,10 @@ import ch.rasc.twofa.entity.UserLog;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -90,7 +90,6 @@ public class AutoEmailJob extends QuartzJobBean {
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(messageBodyPart);
         MimeBodyPart attachPart = new MimeBodyPart();
-
         attachPart.attachFile("src/main/resources/static/Login log between " + formatter.format(tStart) + " and " + formatter.format(tEnd) + ".csv");
         multipart.addBodyPart(attachPart);
         msg.setContent(multipart);
@@ -115,14 +114,13 @@ public class AutoEmailJob extends QuartzJobBean {
                      new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             ow.write("username, rolename, 2FA status, login time\n");
 
-            for (int i = 0; i < userLogList.size(); i++) {
-                ow.write(addOneLine(userLogList.get(i)));
+            for (UserLog userLog : userLogList) {
+                ow.write(addOneLine(userLog));
             }
             ow.flush();
         }
         catch (IOException e) {
             System.err.println("error in generateCsvFile");
-            return;
         }
     }
 }

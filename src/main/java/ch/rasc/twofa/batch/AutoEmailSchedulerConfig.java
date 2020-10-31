@@ -32,7 +32,6 @@ public class AutoEmailSchedulerConfig
      * Get an instance of job factory for token revocation job
      * to be managed by spring
      *
-     * @return
      */
     @Bean( name = "autoEmailJob" )
     public JobDetailFactoryBean autoEmailJob()
@@ -56,7 +55,6 @@ public class AutoEmailSchedulerConfig
      * Get an instance of cron trigger factory for FAILED token revocation job
      * to be managed by spring
      *
-     * @return
      */
     @Bean( name = "autoEmailJobTrigger" )
     public CronTriggerFactoryBean autoEmailJobTrigger()

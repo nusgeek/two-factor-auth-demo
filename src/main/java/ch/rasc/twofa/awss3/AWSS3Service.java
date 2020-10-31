@@ -1,18 +1,14 @@
 package ch.rasc.twofa.awss3;
 
-    import java.io.File;
-import java.util.List;
-    import java.util.Map;
-
-    import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.CopyObjectResult;
-import com.amazonaws.services.s3.model.DeleteObjectsRequest;
-import com.amazonaws.services.s3.model.DeleteObjectsResult;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public class AWSS3Service {
     private final AmazonS3 s3client;
@@ -33,12 +29,24 @@ public class AWSS3Service {
 
     //create a bucket
     public Bucket createBucket(String bucketName) {
-        return s3client.createBucket(bucketName);
+        try {
+            return s3client.createBucket(bucketName);
+        } catch (AmazonServiceException e) {
+            throw new AmazonServiceException("amazon service exception");
+        } catch (SdkClientException e) {
+            throw new SdkClientException("bucket name existed");
+        }
     }
 
     //list all buckets
     public List<Bucket> listBuckets() {
-        return s3client.listBuckets();
+        try {
+            return s3client.listBuckets();
+        } catch (AmazonServiceException e) {
+            throw new AmazonServiceException("amazon service exception");
+        } catch (SdkClientException e) {
+            throw new SdkClientException("bucket name existed");
+        }
     }
 
     //delete a bucket
@@ -52,10 +60,11 @@ public class AWSS3Service {
     }
 
     // uploading objects
-    public Map<String, PutObjectResult> putObjects(String bucketName, Map<String, File> map) {
-
+    public void putObjects(String bucketName, Map<String, File> map) {
+        for (Map.Entry<String, File> entry : map.entrySet()) {
+            putObject(bucketName, entry.getKey(), entry.getValue());
+        }
     }
-
 
     //listing objects
     public ObjectListing listObjects(String bucketName) {

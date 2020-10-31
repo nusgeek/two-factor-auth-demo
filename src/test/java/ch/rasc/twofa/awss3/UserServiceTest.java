@@ -212,7 +212,7 @@
 //    @Test
 //    public void scenario_01_001() throws RecordNotFoundException
 //    {
-//        SysmUserEntity entity = newSysmUserEntity();
+//        SysmUserEntity entity = new SysmUserEntity();
 //        when( userRepo.findOneByRef( any( UUID.class ) ) ).thenReturn( Optional.of( entity ) );
 //        UserService.User user = userService.getUser( entity.getRef() );
 //        assertEquals( entity.getRef(), user.getId() );

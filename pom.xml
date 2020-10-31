@@ -21,9 +21,29 @@
 		<doma.version>1.2.1</doma.version>
 		<quartz.version>2.3.0</quartz.version>
 		<bouncycastle.version>1.66</bouncycastle.version>
+		<junit-jupiter.version>5.2.0</junit-jupiter.version>
 	</properties>
 
 	<dependencies>
+
+
+		<!--integration test-->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-test</artifactId>
+			<version>2.2.1.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<!--junit test - no need version-->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.1</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!--aws s3-->
 		<dependency>
 			<groupId>com.amazonaws</groupId>
@@ -138,7 +158,27 @@
             <artifactId>lombok</artifactId>
             <version>1.16.22</version>
         </dependency>
-    </dependencies>
+
+<!--		<dependency>-->
+<!--			<groupId>org.junit.jupiter</groupId>-->
+<!--			<artifactId>junit-jupiter</artifactId>-->
+<!--			<scope>test</scope>-->
+<!--		</dependency>-->
+<!--	</dependencies>-->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.7.0</version>
+			<scope>test</scope>
+		</dependency>
+<!--		Twilio message-->
+		<dependency>
+			<groupId>com.twilio.sdk</groupId>
+			<artifactId>twilio</artifactId>
+			<version>7.20.0</version>
+		</dependency>
+
+	</dependencies>
 
 	<build>
 	  <finalName>totp-demo</finalName>
