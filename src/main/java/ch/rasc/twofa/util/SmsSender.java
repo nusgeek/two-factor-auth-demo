@@ -21,18 +21,24 @@ public class SmsSender {
     public static void main(String[] args) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         PhoneNumber senderNumber = new PhoneNumber("+14158818946");
-        Message message = Message
-                .creator(new PhoneNumber("+19513077915"), // to
-                        senderNumber, // from
-                        "Magic sms test----" + new Date())
-//                .setMediaUrl(
-//                        Promoter.listOfOne(URI.create("https://www.w3schools.com/w3css/img_lights.jpg"))
-//                )
-                .create();
-//
-        System.out.println("--------------------------" + message.getSid());
-//        printAllDeliveryStatus();
-        printStatusAsync();
+        String[] numbers = {"+18572321062", "+18583717705", "+18436306420"};
+        long start = System.currentTimeMillis();
+        int i = 0;
+        while (i < 3) {
+            for (int j = 0; j < numbers.length; j++) {
+                Message
+                    .creator(new PhoneNumber(numbers[j]), // to
+                            senderNumber, // from
+                            "Magic sms test---- to " + numbers[j] + new Date())
+    //                .setMediaUrl(
+    //                        Promoter.listOfOne(URI.create("https://www.w3schools.com/w3css/img_lights.jpg"))
+                    .create();
+            }
+            i++;
+        }
+        long end = System.currentTimeMillis();
+        System.out.println((end - start)/1000);//        printAllDeliveryStatus();
+//        printStatusAsync();
     }
 
     private static void printAllDeliveryStatus() {

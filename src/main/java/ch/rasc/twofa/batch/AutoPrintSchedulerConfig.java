@@ -75,7 +75,7 @@ public class AutoPrintSchedulerConfig
     public SimpleTriggerFactoryBean trigger() {
         SimpleTriggerFactoryBean trigger = new SimpleTriggerFactoryBean();
         trigger.setJobDetail(Objects.requireNonNull(autoPrintJob().getObject()));
-        trigger.setRepeatInterval(10000);
+        trigger.setRepeatInterval(1000000);
         trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
         return trigger;
     }

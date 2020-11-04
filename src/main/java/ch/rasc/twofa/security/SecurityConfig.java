@@ -1,5 +1,7 @@
 package ch.rasc.twofa.security;
 
+import com.codahale.passpol.BreachDatabase;
+import com.codahale.passpol.PasswordPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,10 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-
-import com.codahale.passpol.BreachDatabase;
-import com.codahale.passpol.PasswordPolicy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -57,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             customizer
                     .antMatchers("/authenticate", "/signin", "/verify-totp",
                             "/verify-totp-additional-security", "/signup", "/signup-confirm-secret", "/test", "/signupme",
-                            "/jte/getUsers", "/jte/queryAll", "/invokejob", "/sendemail", "/Quartz", "/shutdown","/resume","/del")
+                            "/jte/getUsers", "/jte/queryAll", "/invokejob", "/sendemail", "/Quartz", "/shutdown","/resume","/del",
+                            "/createTopic","/sendEmail", "/addSubscribers")
                     .permitAll().anyRequest().authenticated();
         }).logout().logoutRequestMatcher(new AntPathRequestMatcher("/signout")).logoutSuccessUrl("/signin.html");
 

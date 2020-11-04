@@ -96,7 +96,7 @@ public class AutoEmailJob extends QuartzJobBean {
         Transport.send(msg);
     }
 
-    private String addOneLine(UserLog userLog) {
+    private String addOneLine(UserLog userLog) { // create as an object
             String username = userLog.getUsername();
             Timestamp loginTime = userLog.getLoginTime();
             String roleName = userRepository.findByUsername(username).getRoleName();
@@ -114,7 +114,7 @@ public class AutoEmailJob extends QuartzJobBean {
                      new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             ow.write("username, rolename, 2FA status, login time\n");
 
-            for (UserLog userLog : userLogList) {
+            for (UserLog userLog : userLogList) { // object + object
                 ow.write(addOneLine(userLog));
             }
             ow.flush();
