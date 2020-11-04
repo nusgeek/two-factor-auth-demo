@@ -6,9 +6,14 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.model.Region;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
-import com.amazonaws.services.sns.model.*;
+import com.amazonaws.services.sns.model.CreateTopicRequest;
+import com.amazonaws.services.sns.model.CreateTopicResult;
+import com.amazonaws.services.sns.model.DeleteTopicRequest;
+import com.amazonaws.services.sns.model.SubscribeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +25,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
+@PropertySource("classpath:aws.properties")
 public class EmailSenderAWSController {
+    @Value("${accessKey}")
+    private String accessKey;
+
+    @Value("${secretKey}")
+    private String secretKey;
 
     Logger logger = LoggerFactory.getLogger(getClass());
     // helper method is more elegant
@@ -28,8 +39,7 @@ public class EmailSenderAWSController {
         return AmazonSNSClient
                 .builder()
                 .withRegion(Region.AP_Singapore.toString())
-                .withCredentials(getAWSCredentials("AKIAUHW7W74BQUY3Y5MY",
-                        "isjJe+f/SOs39nMnWnBs7HYcScu2/zBU+TSqa74f"))
+                .withCredentials(getAWSCredentials(accessKey, secretKey))
                 .build();
     }
 

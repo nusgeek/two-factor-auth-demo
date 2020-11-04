@@ -1,6 +1,4 @@
-src/main/java/ch/rasc/twofa/awss3/CreateBucket.java
-src/main/java/ch/rasc/twofa/awss3/S3Application.java
-src/main/java/ch/rasc/twofa/awss3/ClientConnection.java
+src/main/resources/aws.properties
 
 *.png
 *.csv
