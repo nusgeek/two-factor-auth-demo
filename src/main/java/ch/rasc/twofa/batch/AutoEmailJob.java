@@ -3,6 +3,7 @@ package ch.rasc.twofa.batch;
 import ch.rasc.twofa.dao.UserLogRepository;
 import ch.rasc.twofa.dao.UserRepository;
 import ch.rasc.twofa.entity.UserLog;
+import ch.rasc.twofa.entity.UserLoginReportRecord;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -62,9 +63,10 @@ public class AutoEmailJob extends QuartzJobBean {
         props.put("mail.smtp.port", "587");
 
         /* 3 hours interval */
-        Long date = new Date().getTime();
-        Timestamp tStart = new Timestamp(date - 1000 * 60 * 60 * 24);
-        Timestamp tEnd = new Timestamp(date);
+        long nowTime = new Date().getTime();
+        long oldTime = nowTime - 1000L * 60 * 60 * 24 * 30;
+        Timestamp tStart = new Timestamp(oldTime);
+        Timestamp tEnd = new Timestamp(nowTime);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 
         ArrayList<UserLog> userLogList = userLogRepository.findByLoginTimeBetween(tStart, tEnd);
@@ -96,15 +98,12 @@ public class AutoEmailJob extends QuartzJobBean {
         Transport.send(msg);
     }
 
-    private String addOneLine(UserLog userLog) { // create as an object
+    private UserLoginReportRecord addOneLine(UserLog userLog) { // create as an object
             String username = userLog.getUsername();
             Timestamp loginTime = userLog.getLoginTime();
             String roleName = userRepository.findByUsername(username).getRoleName();
-            boolean is2FA;
-            if (userRepository.findByUsername(username).getSecret() == null) {is2FA = false;}
-            else {is2FA = true;}
-
-            return username + "," + roleName + "," + is2FA + "," + loginTime.toString() + "\n";
+            String is2FA = userRepository.findByUsername(username).getSecret();
+            return new UserLoginReportRecord(username, roleName, is2FA, loginTime);
     }
 
 
@@ -115,7 +114,7 @@ public class AutoEmailJob extends QuartzJobBean {
             ow.write("username, rolename, 2FA status, login time\n");
 
             for (UserLog userLog : userLogList) { // object + object
-                ow.write(addOneLine(userLog));
+                ow.write(addOneLine(userLog).createOneRecord());
             }
             ow.flush();
         }
