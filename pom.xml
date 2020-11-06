@@ -22,35 +22,43 @@
 		<quartz.version>2.3.0</quartz.version>
 		<bouncycastle.version>1.66</bouncycastle.version>
 		<junit-jupiter.version>5.2.0</junit-jupiter.version>
+		<aws.java.sdk.version>2.13.7</aws.java.sdk.version>
 	</properties>
+<!--If you created your Maven project in a different way, configure the latest version of the SDK for your project
+by ensuring that the pom.xml file contains the following.-->
+	<!--for -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.amazonaws</groupId>
+				<artifactId>aws-java-sdk-bom</artifactId>
+				<version>1.11.893</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>software.amazon.awssdk</groupId>
+				<artifactId>bom</artifactId>
+				<version>2.15.20</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
-
-
-		<!--integration test-->
+	<!--sns dependency from aws-->
+		<!-- https://mvnrepository.com/artifact/software.amazon.awssdk/sns -->
 		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-test</artifactId>
-			<version>2.2.1.RELEASE</version>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>sns</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-
-		<!--junit test - no need version-->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
-			<scope>test</scope>
-		</dependency>
-
 		<!--aws s3-->
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>1.11.892</version>
 		</dependency>
-
 		<!-- aws messaging-->
 		<!--including 6 dependencies -->
 		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-aws-messaging/2.2.4.RELEASE -->
@@ -60,10 +68,20 @@
 			<version>2.2.4.RELEASE</version>
 		</dependency>
 
+		<!--integration test-->
 		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>sns</artifactId>
-			<version>2.0.0-preview-8</version>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-test</artifactId>
+			<version>2.2.1.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!--junit test - no need version-->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.1</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -191,6 +209,10 @@
 			<groupId>com.twilio.sdk</groupId>
 			<artifactId>twilio</artifactId>
 			<version>7.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>sns</artifactId>
 		</dependency>
 
 	</dependencies>

@@ -1,16 +1,18 @@
 package ch.rasc.twofa.util;
 
+
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.model.Region;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.MessageAttributeValue;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.PublishResult;
+import software.amazon.awssdk.regions.Region;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class SmsSenderAWS {
     public static void main(String[] args) {
@@ -19,12 +21,12 @@ public class SmsSenderAWS {
 
         AmazonSNS snsClient = AmazonSNSClient
                 .builder()
-                .withRegion(Region.US_West_2.toString())
+                .withRegion(Region.AP_SOUTHEAST_1.toString())
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
 
         String message = "--------------------My SMS message--------------";
-        String phoneNumber = "+19513077915";
+        String phoneNumber = "+6585866220";
         Map<String, MessageAttributeValue> smsAttributes = new HashMap<>();
         //<set SMS attributes, here it's null>
         sendSMSMessage(snsClient, message, phoneNumber, smsAttributes);

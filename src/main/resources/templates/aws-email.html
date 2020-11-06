@@ -32,6 +32,26 @@
         <input type="submit" value="submit"/><br>
         <span th:text="${add_subscriber_reminder}" class="reminder"></span>
     </form>
+
+    <h3>Remover a subscriber:</h3>
+    <form action="/removeSubscriber" method="post">
+        <label>ARN: </label>
+        <input type="text" placeholder="ARN" name="arn" value="arn:aws:sns:ap-southeast-1:291453206275:topic-name-test:">
+        <input type="submit" value="submit"/><br>
+        <span th:text="${unsub_endpoint_reminder}" class="reminder"></span>
+    </form>
+
+    <h3>Send an email:</h3>
+    <form action="/sendEmail" method="post">
+        <label>ARN: </label>
+        <input type="text" placeholder="ARN" name="arn" value="arn:aws:sns:ap-southeast-1:291453206275:topic-name-test">
+        <label>Subject: </label>
+        <input type="text" placeholder="Subject" name="subject"><br>
+        <label>Content: </label>
+        <textarea rows="5" cols="60" name="content" placeholder="Put your email content here..."></textarea>
+        <input type="submit" value="send"/><br>
+        <span th:text="${send_email_reminder}" class="reminder"></span>
+    </form>
 </div>
 </body>
 </html>

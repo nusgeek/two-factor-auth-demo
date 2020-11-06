@@ -1,24 +1,24 @@
 package ch.rasc.twofa.util;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.model.Region;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
-import com.amazonaws.services.sns.model.CreateTopicRequest;
-import com.amazonaws.services.sns.model.CreateTopicResult;
-import com.amazonaws.services.sns.model.DeleteTopicRequest;
-import com.amazonaws.services.sns.model.SubscribeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
-import software.amazon.awssdk.services.sns.model.PublishRequest;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.sns.SnsClient;
+import software.amazon.awssdk.services.sns.model.*;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -35,55 +35,64 @@ public class EmailSenderAWSController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
     // helper method is more elegant
-    private AmazonSNS getSnsBuilder() {
-        return AmazonSNSClient
-                .builder()
-                .withRegion(Region.AP_Singapore.toString())
-                .withCredentials(getAWSCredentials(accessKey, secretKey))
+    private SnsClient getSnsClient() {
+        return SnsClient.builder()
+//                .credentialsProvider(getAWSCredentials(accessKey, secretKey))
+                .region(Region.AP_SOUTHEAST_1)
                 .build();
     }
 
-    private AWSCredentialsProvider getAWSCredentials(String accessKey, String secretKey) {
-        BasicAWSCredentials awsBasicCredentials = new BasicAWSCredentials(accessKey, secretKey);
-        return new AWSStaticCredentialsProvider(awsBasicCredentials);
+    private AwsCredentialsProvider getAWSCredentials(String accessKey, String secretKey) {
+        AwsBasicCredentials awsBasicCredentials = AwsBasicCredentials.create(accessKey, secretKey);
+        AwsCredentialsProvider awsCredentialsProvider = () -> awsBasicCredentials;
+        return awsCredentialsProvider;
     }
 
     @PostMapping("/createTopic")
     private ModelAndView createTopic(@RequestParam("topic_name") String topicName) throws URISyntaxException {
 
-        // Topic name cannot contain spaces
-        final CreateTopicRequest topicCreateRequest = new CreateTopicRequest(topicName);
+        final CreateTopicRequest topicCreateRequest = CreateTopicRequest.builder().name(topicName).build();
 
-//        Tag tag = new Tag();
-//        tag.setKey("tagKey");
-//        tag.setValue("tagValue");
-//        CreateTopicRequest createTopicRequest = topicCreateRequest.withTags(tag);
+        SnsClient snsClient = getSnsClient();
 
-        // Helper method makes the code more readable
-        AmazonSNS snsClient = getSnsBuilder();
-
-        final CreateTopicResult topicCreateResult = snsClient.createTopic(topicCreateRequest);
-
-        logger.info(topicCreateResult.toString());
-        logger.info("Topic creation successful. Topic ARN: {}", topicCreateResult.getTopicArn());
-        logger.info("Topics: {}", snsClient.listTopics());
+        final CreateTopicResponse topicCreateResponse = snsClient.createTopic(topicCreateRequest);
 
         Map<String, String> model = new HashMap<>();
-        model.put("add_topic_reminder", "Topic created successfully. Topic ARN: " + topicCreateResult.getTopicArn());
+        if (topicCreateResponse.sdkHttpResponse().isSuccessful()) {
+            logger.info(topicCreateResponse.toString());
+            logger.info("Topic creation successful. Topic ARN: {}", topicCreateResponse.topicArn());
+            logger.info("Topics: {}", snsClient.listTopics());
+            model.put("add_topic_reminder", "Topic created successfully. Topic ARN: " + topicCreateResponse.topicArn());
+        } else {
+            model.put("add_topic_reminder", "Failed to create topic.");
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, topicCreateResponse.sdkHttpResponse().statusText().get()
+            );
+        }
+
+        snsClient.close();
+
         return new ModelAndView("aws-email", model);
     }
 
     @PostMapping("/deleteTopic")
     private ModelAndView deleteTopic(@RequestParam("topic_arn") String topicArn) throws URISyntaxException {
-        AmazonSNS snsClient = getSnsBuilder();
+        SnsClient snsClient = getSnsClient();
 
-        // Delete an Amazon SNS topic.
-        final DeleteTopicRequest deleteTopicRequest = new DeleteTopicRequest(topicArn);
-        snsClient.deleteTopic(deleteTopicRequest);
+        final DeleteTopicRequest deleteTopicRequest = DeleteTopicRequest.builder().topicArn(topicArn).build();
 
-        // Print the request ID for the DeleteTopicRequest action.
+        DeleteTopicResponse topicDeleteResponse = snsClient.deleteTopic(deleteTopicRequest);
+
         Map<String, String> model = new HashMap<>();
-        model.put("delete_topic_reminder", "Topic deleted successfully.");
+        if (topicDeleteResponse.sdkHttpResponse().isSuccessful()) {
+            model.put("delete_topic_reminder", "Topic deleted successfully.");
+            logger.info("Topic deletion successful. Topic ARN: {}", topicDeleteResponse.toString());
+        } else {
+            model.put("delete_topic_reminder", "Failed to delete topic.");
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, topicDeleteResponse.sdkHttpResponse().statusText().get()
+            );}
+
         return new ModelAndView("aws-email", model);
     }
 
@@ -91,25 +100,37 @@ public class EmailSenderAWSController {
     private ModelAndView addSubscriberToTopic(@RequestParam("arn") String arn, @RequestParam("email_address") String email)
             throws URISyntaxException {
 
-        AmazonSNS snsClient = getSnsBuilder();
+        SnsClient snsClient = getSnsClient();
 
-        final SubscribeRequest subscribeRequest = new SubscribeRequest(arn, "email", email);
+        final SubscribeRequest subscribeRequest = SubscribeRequest.builder()
+                .protocol("email")
+                .topicArn(arn)
+                .endpoint(email)
+                .build();
 
-        snsClient.subscribe(subscribeRequest);
+        SubscribeResponse subscribeResponse = snsClient.subscribe(subscribeRequest);
 
         Map<String, String> model = new HashMap<>();
-        model.put("add_subscriber_reminder", "Please check your email to activate the subscription.");
-//        return "Topic ARN: " + topicCreateResult.getTopicArn();
+        if (subscribeResponse.sdkHttpResponse().isSuccessful()) {
+            logger.info("Subscriber {} subscribes topic successfully.", email);
+            model.put("add_subscriber_reminder", "Please check your email to activate the subscription.");
+        } else {
+            model.put("add_subscriber_reminder", "Failed to add a subscriber.");
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, subscribeResponse.sdkHttpResponse().statusText().get()
+            );
+        }
+
+        snsClient.close();
+
         return new ModelAndView("aws-email", model);
     }
 
     @PostMapping("/sendEmail")
-    private String sendEmail(@RequestParam("arn") String arn, @RequestParam("subject") String subject,
-                             @RequestParam("content") String content) throws URISyntaxException {
+    private ModelAndView sendEmail(@RequestParam("arn") String arn, @RequestParam("subject") String subject,
+                          @RequestParam("content") String content) throws URISyntaxException {
 
-        AmazonSNS snsClient = getSnsBuilder();
-
-        final String msg = "This Stack Abuse Demo email works!";
+        SnsClient snsClient = getSnsClient();
 
         final PublishRequest publishRequest = PublishRequest.builder()
                 .topicArn(arn)
@@ -117,19 +138,41 @@ public class EmailSenderAWSController {
                 .message(content)
                 .build();
 
-//        PublishResult publishResponse = snsClient.publish(publishRequest);
-//
-//        if (publishResponse.sdkHttpResponse().isSuccessful()) {
-//            System.out.println("Message publishing successful");
-//        } else {
-//            throw new ResponseStatusException(
-//                    HttpStatus.INTERNAL_SERVER_ERROR, publishResponse.sdkHttpResponse().statusText().get());
-//        }
-//
-//        snsClient.close();
-        return "Email sent to subscribers. Message-ID: ";
+        PublishResponse publishResponse = snsClient.publish(publishRequest);
+
+        Map<String, String> model = new HashMap<>();
+        if (publishResponse.sdkHttpResponse().isSuccessful()) {
+            model.put("send_email_reminder", "Email sent successfully!");
+            logger.info("Message publishing successful");
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, publishResponse.sdkHttpResponse().statusText().get());
+        }
+
+        snsClient.close();
+        return new ModelAndView("aws-email", model);
     }
 
+    @PostMapping("/removeSubscriber")
+    private ModelAndView removeSubscriber(@RequestParam("arn") String arn) {
+        SnsClient snsClient = getSnsClient();
+
+        Map<String, String> model = new HashMap<>();
+        try {
+            UnsubscribeRequest unsubscribeRequest = UnsubscribeRequest.builder()
+                    .subscriptionArn(arn)
+                    .build();
+
+            snsClient.unsubscribe(unsubscribeRequest);
+
+            model.put("unsub_endpoint_reminder", "The user has been successfully unsubscribed.");
+        } catch (SnsException e) {
+            logger.error(e.awsErrorDetails().errorMessage());
+            model.put("unsub_endpoint_reminder", "Unsubscription failed!");
+            return new ModelAndView("aws-email", model);
+        }
+        return new ModelAndView("aws-email", model);
+    }
 
     public static void main(String[] args) {
 
@@ -138,19 +181,19 @@ public class EmailSenderAWSController {
 
         AmazonSNS snsClient = AmazonSNSClient
                 .builder()
-                .withRegion(Region.EU_London.toString())
+                .withRegion(Region.AP_SOUTHEAST_1.toString())
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
-
-        // Create an Amazon SNS topic.
-        final CreateTopicRequest createTopicRequest = new CreateTopicRequest("MyTopic");
-        final CreateTopicResult createTopicResponse = snsClient.createTopic(createTopicRequest);
-
-        // Print the topic ARN.
-        System.out.println("TopicArn:" + createTopicResponse.getTopicArn());
-
-        // Print the request ID for the CreateTopicRequest action.
-        System.out.println("CreateTopicRequest: " + snsClient.getCachedResponseMetadata(createTopicRequest));
+//
+//        // Create an Amazon SNS topic.
+//        final CreateTopicRequest createTopicRequest = new CreateTopicRequest("MyTopic");
+//        final CreateTopicResult createTopicResponse = snsClient.createTopic(createTopicRequest);
+//
+//        // Print the topic ARN.
+//        System.out.println("TopicArn:" + createTopicResponse.getTopicArn());
+//
+//        // Print the request ID for the CreateTopicRequest action.
+//        System.out.println("CreateTopicRequest: " + snsClient.getCachedResponseMetadata(createTopicRequest));
 
 
 //        // Publish a message to an Amazon SNS topic.
