@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/authenticate", "/signin", "/verify-totp",
                             "/verify-totp-additional-security", "/signup", "/signup-confirm-secret", "/test", "/signupme",
                             "/jte/getUsers", "/jte/queryAll", "/invokejob", "/sendemail", "/Quartz", "/shutdown","/resume","/del",
-                            "/createTopic","/sendEmail", "/addSubscribers")
+                            "/createTopic","/sendEmail", "/addSubscribers","/webjars/**")
                     .permitAll().anyRequest().authenticated();
         }).logout().logoutRequestMatcher(new AntPathRequestMatcher("/signout")).logoutSuccessUrl("/signin.html");
 
@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/", "/assets/**/*", "/svg/**/*", "/*.br", "/*.gz",
-                "/*.html", "/*.js", "/*.css", "/*.woff2", "/*.ttf", "/*.eot",
+                "/*.html", "/*.js", "/**/*.css", "/*.woff2", "/*.ttf", "/*.eot",
                 "/*.svg", "/*.woff", "/*.ico");
     }
 

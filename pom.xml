@@ -23,6 +23,8 @@
 		<bouncycastle.version>1.66</bouncycastle.version>
 		<junit-jupiter.version>5.2.0</junit-jupiter.version>
 		<aws.java.sdk.version>2.13.7</aws.java.sdk.version>
+		<bootstrap.version>4.3.1</bootstrap.version>
+		<jquery.version>3.5.1</jquery.version>
 	</properties>
 <!--If you created your Maven project in a different way, configure the latest version of the SDK for your project
 by ensuring that the pom.xml file contains the following.-->
@@ -47,7 +49,20 @@ by ensuring that the pom.xml file contains the following.-->
 	</dependencyManagement>
 
 	<dependencies>
-	<!--sns dependency from aws-->
+	<!-- bootstrap -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>${bootstrap.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>${jquery.version}</version>
+		</dependency>
+
+		<!--sns dependency from aws-->
 		<!-- https://mvnrepository.com/artifact/software.amazon.awssdk/sns -->
 		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
@@ -87,6 +102,10 @@ by ensuring that the pom.xml file contains the following.-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>nz.net.ultraq.thymeleaf</groupId>
+			<artifactId>thymeleaf-layout-dialect</artifactId>
 		</dependency>
 		<!--connect to mysql database-->
 		<dependency>
@@ -214,7 +233,6 @@ by ensuring that the pom.xml file contains the following.-->
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>sns</artifactId>
 		</dependency>
-
 	</dependencies>
 
 	<build>

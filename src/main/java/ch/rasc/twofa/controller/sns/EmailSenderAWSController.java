@@ -1,4 +1,4 @@
-package ch.rasc.twofa.util;
+package ch.rasc.twofa.controller.sns;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign in page</title>
-    <link rel="stylesheet" href="all.css">
+    <link rel="stylesheet" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/all.css">
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
-<body>
-<h1>Sign In</h1>
-<form method="post" action="/signin">
-    <div>
-        <label>Your email</label><br>
-        <input type="text" placeholder="Username" name="username"/>
+<body class="body-signin">
+    <div class="container">
+        <form class="form-signin" method="post" action="/signin">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <input type="text" class="input-block-level" placeholder="Username" name="username">
+            <input type="password" class="input-block-level" placeholder="Password" name="password"><br>
+            <span th:text="${reminder}" class="reminder"></span><br>
+            <span th:text="${noAuth}" class="reminder"></span>
+            <br>
+            <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+            <button class="btn btn-large btn-primary" type="button" onclick="window.location='signup.html'">Sign up</button>
+        </form>
     </div>
-    <div>
-        <label>Password</label><br>
-        <input type="Password" placeholder="Password" name="password"/>
-    </div>
-    <span th:text="${reminder}" class="reminder"></span>
-    <span th:text="${noAuth}" class="reminder"></span>
-    <div>
-        <input type="submit" onclick="" value="Sign in"/>
-        <input type="button" onclick="window.location='signup.html'" value="Sign up"/>
-    </div>
-</form>
 </body>
 </html>

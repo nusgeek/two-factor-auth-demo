@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -64,7 +61,7 @@ public class AuthController {
       map.put("role_name", appUserDetail.getRoleName());
       map.put("detail", appUserDetail.getDetail());
 
-      return new ModelAndView("home", map);
+      return new ModelAndView("layout", map);
     }
 
     HttpSession httpSession = request.getSession(false);
@@ -102,10 +99,10 @@ public class AuthController {
         httpSession.setMaxInactiveInterval(60);
         /* record login time*/
         recordUserLogin(detail);
+        map = returnViewPara(detail);
 
         /* transfer data to frontend*/
-        map = returnViewPara(detail);
-        return new ModelAndView("home", map);
+        return new ModelAndView("layout.html", map);
       }
     }
     else {
@@ -114,6 +111,15 @@ public class AuthController {
     map.put("reminder", "username or password is not correct");
     return new ModelAndView("signin", map);
   }
+//
+//  @GetMapping("/home")
+//  public ModelAndView home(String role_name, String detail, String username) {
+//    Map<String, String> model = new HashMap<>();
+//    model.put("username", username);
+//    model.put("role_name", role_name);
+//    model.put("detail", detail);
+//    return new ModelAndView("main.html", model);
+//  }
 
   @PostMapping("/verify-totp")
   public ModelAndView totp(@RequestParam String code,
@@ -142,7 +148,7 @@ public class AuthController {
         recordUserLogin(detail);
         /* transfer data to frontend*/
         map = returnViewPara(detail);
-        return new ModelAndView("home", map);
+        return new ModelAndView("redirect:/main.html", map);
       }
 
       setAdditionalSecurityFlag(detail.getAppUserId());
@@ -193,7 +199,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(userAuthentication);
         /* transfer data to frontend*/
         map = returnViewPara(detail);
-        return new ModelAndView("home", map);
+        return new ModelAndView("main", map);
       }
     }
     map.put("noAuth", "Please re-signin");
