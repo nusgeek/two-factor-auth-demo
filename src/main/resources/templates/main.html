@@ -1,40 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorator="layout"
-      xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
-    <link rel="stylesheet" href="css/all.css">
+    <title>Home page</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/all.css"/>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="js/all.js"></script>
 </head>
 <body>
-    <div layout:fragment="content">
-        <div id="content">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
-                        <i class="fas fa-align-left"></i>
-                        <span>Toggle Sidebar</span>
-                    </button>
-
-                </div>
-            </nav>
-        </div>
-        <div>
-            <span style="font-size: 40px;">Welcome back, </span><span style="font-size: 40px;" th:text="${username}"></span>
-            <form th:action="@{/signout}" method="post">
-                <input type="submit" value="Sign Out"/>
-            </form>
-            <div>
-                You are a <span th:text="${role_name}">role</span>. <br><br><b>Here is your self-introduction:</b>
-                <div th:text="${detail}" style="background-color: aliceblue">self introduction</div>
-            </div>
-            <a href="aws-email.html">AWS email test</a>
-        </div>
-        <div th:include="~{layout::head}">this is the head from framework, user ~{}</div>
-        <div th:include="/layout::left">this is the left from framework, use include</div>
-        <div th:insert="/layout::right">this is the right from framework, use insert</div>
-        <div th:replace="/layout::foot">this is the foot from framework, use replace</div>
+    <div class="wrapper">
+        <div th:include="components/siderbar :: sidebar"></div>
+        <div th:include="components/main :: main"></div>
     </div>
+<!--    <div th:include="components/footer :: footer"></div>-->
 </body>
 </html>

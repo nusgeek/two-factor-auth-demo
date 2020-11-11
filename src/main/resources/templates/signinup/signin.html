@@ -13,12 +13,13 @@
         <form class="form-signin" method="post" action="/signin">
             <h2 class="form-signin-heading">Please sign in</h2>
             <input type="text" class="input-block-level" placeholder="Username" name="username">
-            <input type="password" class="input-block-level" placeholder="Password" name="password"><br>
-            <span th:text="${reminder}" class="reminder"></span><br>
+            <input type="password" class="input-block-level" placeholder="Password" name="password">
+            <span th:text="${reminder}" class="reminder"></span>
             <span th:text="${noAuth}" class="reminder"></span>
-            <br>
-            <button class="btn btn-large btn-primary" type="submit">Sign in</button>
-            <button class="btn btn-large btn-primary" type="button" onclick="window.location='signup.html'">Sign up</button>
+            <div>
+                <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+                <button class="btn btn-large btn-primary" type="button" onclick="window.location='signup.html'">Sign up</button>
+            </div>
         </form>
     </div>
 </body>
