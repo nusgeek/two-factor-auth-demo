@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>content</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/all.css"/>
+    <link rel="stylesheet" href="css/table.css"/>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="js/all.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!-- replace will use div from th:fragment-->
+    <div th:replace="~{components/siderbar :: sidebar}"></div>
+    <div id="content">
+        <!-- include will use current div-->
+        <div th:replace="~{components/header :: header}"></div>
+        <!-- the div below instead of div of subpage will appear in final .html file -->
+        <div layout:fragment="main-content" th:id="id-main-content">
+            <p>this text will be replaced by other content.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

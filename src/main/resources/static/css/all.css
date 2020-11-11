@@ -1,12 +1,8 @@
-input {
-    margin: 5px 0px 5px 0px;
-}
+/*
+    DEMO STYLE
+*/
 
-
-/* for collapse of sidebar*/
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-
-
 body {
     font-family: 'Poppins', sans-serif;
     background: #fafafa;
@@ -20,22 +16,66 @@ p {
     color: #999;
 }
 
-a, a:hover, a:focus {
+a,
+a:hover,
+a:focus {
     color: inherit;
     text-decoration: none;
     transition: all 0.3s;
 }
 
+.navbar {
+    padding: 15px 10px;
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-btn {
+    box-shadow: none;
+    outline: none !important;
+    border: none;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
 #sidebar {
-    /* don't forget to add all the previously mentioned styles here too */
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
     background: #7386D5;
     color: #fff;
     transition: all 0.3s;
 }
 
+#sidebar.active {
+    margin-left: -250px;
+}
+
 #sidebar .sidebar-header {
     padding: 20px;
     background: #6d7fcc;
+    text-align: center;
+    color: white;
 }
 
 #sidebar ul.components {
@@ -49,39 +89,26 @@ a, a:hover, a:focus {
 }
 
 #sidebar ul li a {
-    padding: 10px;
+    padding: 10px 10px 10px 25px;
     font-size: 1.1em;
     display: block;
 }
+
 #sidebar ul li a:hover {
     color: #7386D5;
     background: #fff;
 }
 
-#sidebar ul li.active > a, a[aria-expanded="true"] {
+#sidebar ul li.active>a,
+a[aria-expanded="true"] {
     color: #fff;
     background: #6d7fcc;
 }
 
-ul ul a {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
-    background: #6d7fcc;
-}
-.wrapper {
-    display: flex;
-    width: 100%;
-    align-items: stretch;
-}
-
-#sidebar {
-    min-width: 250px;
-    max-width: 250px;
-    min-height: 100vh;
-}
-
-#sidebar.active {
-    margin-left: -250px;
+#sidebar ul li ul li {
+    margin-left: 20px;
+    font-size: 0.9em;
+    display: block;
 }
 
 a[data-toggle="collapse"] {
@@ -96,6 +123,28 @@ a[data-toggle="collapse"] {
     transform: translateY(-50%);
 }
 
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+#content {
+    width: calc(100% - 250px);
+    padding: 0px 40px 20px 40px;
+    min-height: 100vh;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#content.active {
+    width: 100%;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+
 @media (max-width: 768px) {
     #sidebar {
         margin-left: -250px;
@@ -103,8 +152,10 @@ a[data-toggle="collapse"] {
     #sidebar.active {
         margin-left: 0;
     }
+    #sidebarCollapse span {
+        display: none;
+    }
 }
-
 /* login page */
 .body-signin {
     padding-top: 40px;
@@ -138,3 +189,6 @@ a[data-toggle="collapse"] {
 }
 
 .reminder { color: red; }
+
+/* button */
+.btn-white-font { color: white;}

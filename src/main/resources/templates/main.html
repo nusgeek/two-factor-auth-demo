@@ -1,18 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{components/home}">
 <head>
     <meta charset="UTF-8">
     <title>Home page</title>
-    <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/all.css"/>
-    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="js/all.js"></script>
 </head>
 <body>
-    <div class="wrapper">
-        <div th:include="components/siderbar :: sidebar"></div>
-        <div th:include="components/main :: main"></div>
+    <div layout:fragment="main-content">
+        rejfdosajo
     </div>
 <!--    <div th:include="components/footer :: footer"></div>-->
 </body>

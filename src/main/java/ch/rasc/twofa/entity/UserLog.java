@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 @Table(name = "user_login_log")
 public class UserLog {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer logId;
 
     @Column(name = "username")

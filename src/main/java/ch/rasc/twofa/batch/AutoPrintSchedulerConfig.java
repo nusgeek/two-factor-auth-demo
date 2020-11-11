@@ -34,7 +34,7 @@ public class AutoPrintSchedulerConfig
      * to be managed by spring
      *
      */
-    @Bean( name = "autoPrintJob" )
+//    @Bean( name = "autoPrintJob" )
     public JobDetailFactoryBean autoPrintJob()
     {
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
@@ -71,7 +71,7 @@ public class AutoPrintSchedulerConfig
 //        return triggerFactory;
 //    }
 
-    @Bean (name = "autoPrintJobTrigger")
+//    @Bean (name = "autoPrintJobTrigger")
     public SimpleTriggerFactoryBean trigger() {
         SimpleTriggerFactoryBean trigger = new SimpleTriggerFactoryBean();
         trigger.setJobDetail(Objects.requireNonNull(autoPrintJob().getObject()));

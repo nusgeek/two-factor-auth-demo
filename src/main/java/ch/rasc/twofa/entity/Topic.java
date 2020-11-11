@@ -1,12 +1,14 @@
 package ch.rasc.twofa.entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "topic")
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "topic_name")
@@ -18,10 +20,17 @@ public class Topic {
     @Column(name = "topic_arn")
     private String topicArn;
 
-    public Topic() { }
+    @Column(name = "create_date")
+    private Timestamp timestamp;
+
+    public Topic() {}
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getTopicName() {
@@ -46,5 +55,24 @@ public class Topic {
 
     public void setTopicArn(String topicArn) {
         this.topicArn = topicArn;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Topic{" +
+                "id=" + id +
+                ", topicName='" + topicName + '\'' +
+                ", topicType='" + topicType + '\'' +
+                ", topicArn='" + topicArn + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }

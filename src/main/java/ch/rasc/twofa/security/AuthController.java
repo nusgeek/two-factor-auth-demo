@@ -47,6 +47,16 @@ public class AuthController {
   @Autowired
   private UserLogRepository userLogRepository;
 
+  @GetMapping("/")
+  public ModelAndView loginPage() {
+    return new ModelAndView("signinup/signin");
+  }
+
+  @GetMapping("/home")
+  public ModelAndView home() {
+    return new ModelAndView("main");
+  }
+
   @GetMapping("/authenticate")
   public ModelAndView authenticate(HttpServletRequest request) {
 
@@ -61,7 +71,7 @@ public class AuthController {
       map.put("role_name", appUserDetail.getRoleName());
       map.put("detail", appUserDetail.getDetail());
 
-      return new ModelAndView("layout", map);
+      return new ModelAndView("main", map);
     }
 
     HttpSession httpSession = request.getSession(false);
@@ -69,7 +79,7 @@ public class AuthController {
       httpSession.invalidate();
     }
 
-    return new ModelAndView("redirect:/signin.html");
+    return new ModelAndView("redirect:/");
   }
 
   @PostMapping("/signin")
@@ -88,10 +98,10 @@ public class AuthController {
           httpSession.setAttribute(USER_AUTHENTICATION_OBJECT, userAuthentication);
 
           if (isUserInAdditionalSecurityMode(detail.getAppUserId())) {
-            return new ModelAndView("signin-additional-check");
+            return new ModelAndView("signin_additional_check");
           }
 
-          return new ModelAndView("signin-totp-check");
+          return new ModelAndView("signin_totp_check");
         }
 
         SecurityContextHolder.getContext().setAuthentication(userAuthentication);
@@ -102,14 +112,14 @@ public class AuthController {
         map = returnViewPara(detail);
 
         /* transfer data to frontend*/
-        return new ModelAndView("layout.html", map);
+        return new ModelAndView("main", map);
       }
     }
     else {
       this.passwordEncoder.matches(password, this.userNotFoundEncodedPassword);
     }
     map.put("reminder", "username or password is not correct");
-    return new ModelAndView("signin", map);
+    return new ModelAndView("signinup/signin", map);
   }
 //
 //  @GetMapping("/home")
@@ -118,7 +128,7 @@ public class AuthController {
 //    model.put("username", username);
 //    model.put("role_name", role_name);
 //    model.put("detail", detail);
-//    return new ModelAndView("main.html", model);
+//    return new ModelAndView("header.html", model);
 //  }
 
   @PostMapping("/verify-totp")
@@ -130,13 +140,13 @@ public class AuthController {
         .getAttribute(USER_AUTHENTICATION_OBJECT);
     if (userAuthentication == null) {
       map.put("noAuth", "Please sign in with username and password first.");
-      return new ModelAndView("signin", map);
+      return new ModelAndView("signinup/signin", map);
     }
 
     /*handler has to check if the user is in "additional verification" mode.*/
     AppUserDetail detail = (AppUserDetail) userAuthentication.getPrincipal();
     if (isUserInAdditionalSecurityMode(detail.getAppUserId())) {
-      return new ModelAndView("signin-additional-check");
+      return new ModelAndView("signin_additional_check");
     }
 
     String secret = ((AppUserDetail) userAuthentication.getPrincipal()).getSecret();
@@ -148,15 +158,15 @@ public class AuthController {
         recordUserLogin(detail);
         /* transfer data to frontend*/
         map = returnViewPara(detail);
-        return new ModelAndView("redirect:/main.html", map);
+        return new ModelAndView("main", map);
       }
 
       setAdditionalSecurityFlag(detail.getAppUserId());
-      return new ModelAndView("signin-additional-check");
+      return new ModelAndView("signin_additional_check");
     }
 
     map.put("noAuth", "Please re-signin");
-    return new ModelAndView("signin", map);
+    return new ModelAndView("/", map);
   }
 
   @PostMapping("/verify-totp-additional-security")
@@ -168,12 +178,12 @@ public class AuthController {
         .getAttribute(USER_AUTHENTICATION_OBJECT);
     if (userAuthentication == null) {
       map.put("noAuth", "Please sign in with username and password first.");
-      return new ModelAndView("signin", map);
+      return new ModelAndView("signinup/signin", map);
     }
 
     if (code1.equals(code2) || code1.equals(code3) || code2.equals(code3)) {
       map.put("noAuth", "Please re-signin");
-      return new ModelAndView("signin", map);
+      return new ModelAndView("signinup/signin", map);
     }
 
     String secret = ((AppUserDetail) userAuthentication.getPrincipal()).getSecret();
@@ -187,7 +197,7 @@ public class AuthController {
           noOf30SecondsIntervals, noOf30SecondsIntervals);
       if (result.isValid()) {
         if (result.getShift() > 2 || result.getShift() < -2) {
-          httpSession.setAttribute("totp-shift", result.getShift());
+          httpSession.setAttribute("signinup/totp-shift", result.getShift());
         }
 
         AppUserDetail detail = (AppUserDetail) userAuthentication.getPrincipal();
@@ -203,7 +213,7 @@ public class AuthController {
       }
     }
     map.put("noAuth", "Please re-signin");
-    return new ModelAndView("signin", map);
+    return new ModelAndView("signinup/signin", map);
   }
 
   @GetMapping("/totp-shift")

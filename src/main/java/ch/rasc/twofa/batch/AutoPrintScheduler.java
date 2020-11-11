@@ -18,7 +18,7 @@ public class AutoPrintScheduler {
     @Value("${quartz.job.auto.print.cron.expression}")
     private int timeInterval;
 
-    @Bean ("autoPrintJobScheduler")
+//    @Bean ("autoPrintJobScheduler")
     public void autoPrintJob() throws SchedulerException {
         SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
 

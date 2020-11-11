@@ -72,7 +72,7 @@ public class EmailSenderAWSController {
 
         snsClient.close();
 
-        return new ModelAndView("aws-email", model);
+        return new ModelAndView("aws_email", model);
     }
 
     @PostMapping("/deleteTopic")
@@ -93,7 +93,7 @@ public class EmailSenderAWSController {
                 HttpStatus.INTERNAL_SERVER_ERROR, topicDeleteResponse.sdkHttpResponse().statusText().get()
             );}
 
-        return new ModelAndView("aws-email", model);
+        return new ModelAndView("aws_email", model);
     }
 
     @PostMapping("/addSubscribers")
@@ -123,7 +123,7 @@ public class EmailSenderAWSController {
 
         snsClient.close();
 
-        return new ModelAndView("aws-email", model);
+        return new ModelAndView("aws_email", model);
     }
 
     @PostMapping("/sendEmail")
@@ -150,7 +150,7 @@ public class EmailSenderAWSController {
         }
 
         snsClient.close();
-        return new ModelAndView("aws-email", model);
+        return new ModelAndView("aws_email", model);
     }
 
     @PostMapping("/removeSubscriber")
@@ -169,9 +169,9 @@ public class EmailSenderAWSController {
         } catch (SnsException e) {
             logger.error(e.awsErrorDetails().errorMessage());
             model.put("unsub_endpoint_reminder", "Unsubscription failed!");
-            return new ModelAndView("aws-email", model);
+            return new ModelAndView("aws_email", model);
         }
-        return new ModelAndView("aws-email", model);
+        return new ModelAndView("aws_email", model);
     }
 
     public static void main(String[] args) {

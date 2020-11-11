@@ -33,7 +33,7 @@ public class AutoEmailSchedulerConfig
      * to be managed by spring
      *
      */
-    @Bean( name = "autoEmailJob" )
+//    @Bean( name = "autoEmailJob" )
     public JobDetailFactoryBean autoEmailJob()
     {
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
@@ -56,7 +56,7 @@ public class AutoEmailSchedulerConfig
      * to be managed by spring
      *
      */
-    @Bean( name = "autoEmailJobTrigger" )
+//    @Bean( name = "autoEmailJobTrigger" )
     public CronTriggerFactoryBean autoEmailJobTrigger()
     {
         CronTriggerFactoryBean triggerFactory = new CronTriggerFactoryBean();

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{components/home}">
+<head>
+    <meta charset="UTF-8">
+    <title>Topics</title>
+    <script type="text/javascript">
+        function toCreateTopicPage() {
+            $.get(
+                "/toCreateTopicPage", //url地址
+                {},  //带给服务器的参数
+                function(data){		//成功后的回调函数
+                    //data 是服务器返回的参数
+                    $('#id-main-content').html(data);
+                }
+            );
+        }
+    </script>
+</head>
+<body>
+    <div layout:fragment="main-content">
+        <div class="table-box">
+            <div class="table-heading-container">
+                <div class="table-header">
+                    <div class="table-header-title">
+                        <span class="title-font">
+                            <span>Title</span>
+                            <span>(10)</span>
+                        </span>
+                    </div>
+                    <div class="table-header-buttons btn-white-font">
+                        <a role="button" class="btn btn-primary">Primary</a>
+                        <a role="button" class="btn btn-primary">Primary</a>
+                        <input type="button" class="btn btn-warning" value="Create topic" onclick="toCreateTopicPage()"/>
+                    </div>
+                </div>
+                <div class="table-pagination">
+                    This place is for pagination.
+                </div>
+            </div>
+            <div class="table-content-container">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td colspan="2">Larry the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br style="clear: both;"/>
+        </div>
+    </div>
+</body>
+</html>

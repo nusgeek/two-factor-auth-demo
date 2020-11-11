@@ -1,0 +1,21 @@
+<div class="table-box">
+    <form id="add-topic-form" action="/addOneTopic" method="post">
+        <div class="form-group">
+            <label for="topicName">Topic name</label>
+            <input type="text" class="form-control" id="topicName" name="topicName">
+        </div>
+        <div class="form-group">
+            <label for="topicType">Topic type</label>
+            <select class="form-control" id="topicType" name="topicType">
+                <option>Standard</option>
+                <option>FIFO</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="topicArn">Topic arn</label>
+            <textarea class="form-control" id="topicArn" rows="3" name="topicArn"></textarea>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Submit">
+        <a class="btn btn-danger" href="/topic">Cancel</a>
+    </form>
+</div>
