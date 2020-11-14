@@ -1,6 +1,7 @@
 package ch.rasc.twofa.entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "subscription")
@@ -21,11 +22,18 @@ public class Subscription {
     @Column(name = "protocol")
     private String protocol;
 
+    @Column(name = "create_date")
+    private Timestamp creationDate;
+
     @Column(name = "topic_id")
     private Integer topicId;
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getSubscriptionId() {
@@ -58,6 +66,14 @@ public class Subscription {
 
     public void setProtocol(String protocol) {
         this.protocol = protocol;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Integer getTopicId() {

@@ -47,7 +47,7 @@ public class AuthController {
   @Autowired
   private UserLogRepository userLogRepository;
 
-  @GetMapping("/")
+  @GetMapping("/signin")
   public ModelAndView loginPage() {
     return new ModelAndView("signinup/signin");
   }
@@ -79,7 +79,7 @@ public class AuthController {
       httpSession.invalidate();
     }
 
-    return new ModelAndView("redirect:/");
+    return new ModelAndView("redirect:/signin");
   }
 
   @PostMapping("/signin")
@@ -98,15 +98,15 @@ public class AuthController {
           httpSession.setAttribute(USER_AUTHENTICATION_OBJECT, userAuthentication);
 
           if (isUserInAdditionalSecurityMode(detail.getAppUserId())) {
-            return new ModelAndView("signin_additional_check");
+            return new ModelAndView("signinup/signin_additional_check");
           }
 
-          return new ModelAndView("signin_totp_check");
+          return new ModelAndView("signinup/signin_totp_check");
         }
 
         SecurityContextHolder.getContext().setAuthentication(userAuthentication);
         /*set httpSession timeout -- time unit: second*/
-        httpSession.setMaxInactiveInterval(60);
+        httpSession.setMaxInactiveInterval(3600);
         /* record login time*/
         recordUserLogin(detail);
         map = returnViewPara(detail);

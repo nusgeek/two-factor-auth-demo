@@ -49,6 +49,13 @@ by ensuring that the pom.xml file contains the following.-->
 	</dependencyManagement>
 
 	<dependencies>
+		<!--添加热部署-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+			<scope>true</scope>
+		</dependency>
 	<!-- bootstrap -->
 		<dependency>
 			<groupId>org.webjars</groupId>
@@ -253,6 +260,16 @@ by ensuring that the pom.xml file contains the following.-->
 			<id>jooq</id>
 			<build>
 				<plugins>
+					<plugin>
+						<!--热部署配置-->
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<!--fork:如果没有该项配置,整个devtools不会起作用-->
+							<fork>true</fork>
+						</configuration>
+					</plugin>
+
 					<plugin>
 						<groupId>org.jooq</groupId>
 						<artifactId>jooq-codegen-maven</artifactId>

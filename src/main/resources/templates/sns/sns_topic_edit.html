@@ -1,0 +1,29 @@
+<!--<html>-->
+<!--<head>-->
+<!--    <-->
+<!--</head>-->
+
+<!--</html>-->
+<h3> Update topic</h3>
+<div class="table-box" xmlns:th="http://www.thymeleaf.org">
+    <form id="add-topic-form" action="/editOneTopic" method="post">
+        <input th:value="${id}" hidden name="id">
+        <div class="form-group">
+            <label for="topicName">Topic name</label>
+            <input type="text" class="form-control" id="topicName" name="topicName" th:value="${topicName}"> <!--th:value="${topicName}-->
+        </div>
+        <div class="form-group">
+            <label for="topicType">Topic type</label>
+            <select class="form-control" id="topicType" name="topicType">
+                <!-- very good practice -->
+                <option th:each="type: ${types}" th:selected="${type == topicType}" th:text="${type}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="topicArn">Topic arn</label>
+            <textarea class="form-control" id="topicArn" rows="3" name="topicArn" th:text="${topicArn}"></textarea> <!--th:value="${topicArn}"-->
+        </div>
+        <input class="btn btn-primary" type="submit" value="Update">
+        <a class="btn btn-danger" href="/topic">Cancel</a>
+    </form>
+</div>
