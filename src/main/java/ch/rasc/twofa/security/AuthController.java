@@ -19,9 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 public class AuthController {
@@ -53,12 +55,13 @@ public class AuthController {
   }
 
   @GetMapping("/home")
-  public ModelAndView home() {
+  public ModelAndView home(Model model) {
+
     return new ModelAndView("main");
   }
 
   @GetMapping("/authenticate")
-  public ModelAndView authenticate(HttpServletRequest request) {
+  public RedirectView authenticate(HttpServletRequest request, Model model) {
 
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -71,7 +74,8 @@ public class AuthController {
       map.put("role_name", appUserDetail.getRoleName());
       map.put("detail", appUserDetail.getDetail());
 
-      return new ModelAndView("main", map);
+      model.addAttribute("info", map);
+      return new RedirectView("/home");
     }
 
     HttpSession httpSession = request.getSession(false);
@@ -79,7 +83,7 @@ public class AuthController {
       httpSession.invalidate();
     }
 
-    return new ModelAndView("redirect:/signin");
+    return new RedirectView("/signin");
   }
 
   @PostMapping("/signin")
@@ -133,7 +137,7 @@ public class AuthController {
 
   @PostMapping("/verify-totp")
   public ModelAndView totp(@RequestParam String code,
-      HttpSession httpSession) {
+      HttpSession httpSession, Model model) {
     Map<String, Object> map = new HashMap<>();
     /*The /verify-totp receives the TOTP code and checks if an AppUserAuthentication instance is stored in the HTTP session.*/
     AppUserAuthentication userAuthentication = (AppUserAuthentication) httpSession
@@ -158,7 +162,8 @@ public class AuthController {
         recordUserLogin(detail);
         /* transfer data to frontend*/
         map = returnViewPara(detail);
-        return new ModelAndView("main", map);
+        model.addAttribute("info", map);
+        return new ModelAndView("main");
       }
 
       setAdditionalSecurityFlag(detail.getAppUserId());

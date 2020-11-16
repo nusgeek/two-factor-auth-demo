@@ -29,7 +29,7 @@ public class TopicController {
 
     @GetMapping("/topic")
     public String showTopic(Model model) throws ParseException {
-        model.addAttribute("topics", topicRepository.findAll());
+        model.addAttribute("topics", topicRepository.findAllNotDeleted());
         return "sns/sns_topic";
     }
 
@@ -69,8 +69,11 @@ public class TopicController {
 
 
     @GetMapping("/deleteOneTopic")
-    public String deleteOneTopic(@RequestParam int id) {
-        topicRepository.deleteById(id);
+    public String deleteOneTopic(@RequestParam Integer id) {
+        /* use update in this way instead of query in Repository*/
+        Topic topic = topicRepository.getOne(id);
+        topic.setIsDeleted(true);
+        topicRepository.save(topic);
         return "redirect:/topic";
     }
 

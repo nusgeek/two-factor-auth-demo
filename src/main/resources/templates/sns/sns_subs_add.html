@@ -1,0 +1,35 @@
+<h3>Add one subscription</h3>
+<div class="table-box" xmlns:th="http://www.thymeleaf.org">
+    <form id="add-sub-form" action="/addOneSub" method="post">
+        <div class="form-group">
+            <label>Topic Arn</label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="topicArnSelector">Options</label>
+                </div>
+                <select class="custom-select" id="topicArnSelector" name="topicArnSelector">
+                    <option>Click to choose...</option>
+                    <option th:each="topicArn : ${topicArns}" th:text="${topicArn}">option</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="subProtocol">Topic type</label>
+            <select class="form-control" id="subProtocol" name="subProtocol">
+                <option>HTTP</option>
+                <option>HTTPS</option>
+                <option>Email</option>
+                <option>SNS</option>
+                <option>Amazon SQS</option>
+                <option>AWS Lambda</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="subEndpoint">Endpoint</label>
+            <input class="form-control" id="subEndpoint" name="subEndpoint" placeholder="http://www.example.com">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Submit">
+        <a class="btn btn-danger" href="/subs">Cancel</a>
+    </form>
+</div>
+<!--<script type="text/javascript" src="js/a4jquery.js"></script>-->

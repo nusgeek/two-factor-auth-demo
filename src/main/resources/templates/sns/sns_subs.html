@@ -2,71 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{components/home}">
 <head>
     <meta charset="UTF-8">
-    <title>Topics</title>
-    <script type="text/javascript">
-        function toCreatTopicPage() {
-            $.get(
-                "/toCreateTopicPage", //url地址
-                {},  //带给服务器的参数
-                function(data){		//成功后的回调函数
-                    //data 是服务器返回的参数
-                    $('#id-main-content').html(data);
-                }
-            );
-        }
-
-        function selectCurrentRow(id) {
-            $(".table-header-buttons .disabled").removeClass("disabled");
-            /* remove all checked item */
-            let selected = $(".table-row").hasClass("row-selected");
-            if (selected) {
-                $(".row-selected input").prop("checked", false);
-                $(".row-selected").removeClass("row-selected");
-            }
-            /* add the clicked one */
-            $("#"+id+" input").prop("checked", true);
-            $("#"+id).addClass("row-selected");
-
-            // add data to modal
-            $(".modal-delete-tip").html("<p class='modal-delete-tip'>You really want to delete topic: " +
-                $("#" + id + " .topic-name-cell").text() + "?</p>");
-
-            // transmit id to deleteOneTopic function
-            $(".topic-delete-modal .modal-footer button[onclick]").attr("onclick", "window.location.href='" + "/deleteOneTopic?id=" + id + "'");
-
-            // transmit id to deleteOneTopic function
-            $(".table-header-buttons a[onclick]").attr("onclick", "toEditTopicPage(" + id + ")");
-        }
-        //
-        // function deleteOneTopic(id) {
-        //     $.ajax({
-        //         url: "/deleteOneTopic",
-        //         async: true,
-        //         type: "POST",
-        //         data: {"id":id},
-        //         success: function (data) {
-        //             $('#id-main-content').html(data);
-        //         }
-        //     })
-        // }
-
-        function toEditTopicPage(id) {
-            let oneTr = $("#" + id);
-            let name = $(oneTr).find('td:eq(2)').text(),
-                type = $(oneTr).find('td:eq(3)').text(),
-                arn = $(oneTr).find('td:eq(4)').text();
-            $.ajax({
-                url: "/toEditTopicPage",
-                async: true,
-                type: "POST",
-                data: {"topicName": name, "topicType": type, "topicArn": arn, "id": id},
-                success: function (data) {
-                    $('#id-main-content').html(data);
-                }
-            })
-        }
-
-    </script>
+    <title>Subscription</title>
+<!--    <script type="text/javascript" src="js/all.js"></script>-->
 </head>
 <body>
     <div layout:fragment="main-content">
@@ -80,9 +17,9 @@
                         </span>
                     </div>
                     <div class="table-header-buttons btn-white-font">
-                        <a role="button" class="btn btn-primary disabled" id="topic-edit-button" onclick="toEditTopicPage()">Edit</a>
-                        <a role="button" class="btn btn-primary disabled"  id="topic-delete-button" data-toggle="modal" data-target="#staticBackdrop">Delete</a>
-                        <a role="button" class="btn btn-warning" onclick="toCreatTopicPage()">Create topic</a>
+                        <a role="button" class="btn btn-primary disabled" id="subs-edit-button" onclick="toEditSubPage()">Edit</a>
+                        <a role="button" class="btn btn-primary disabled"  id="subs-delete-button" data-toggle="modal" data-target="#staticBackdrop">Delete</a>
+                        <a role="button" class="btn btn-warning" onclick="toCreateSubPage()">Create topic</a>
 <!--                        <input type="button" class="btn btn-warning" value="Create topic" onclick="toCreateTopicPage()"/>-->
                     </div>
                 </div>
@@ -106,15 +43,16 @@
                         </tr>
                         </thead>
                         <tbody th:remove="all-but-first">
-                        <tr th:each="sub : ${subs}" class="table-row" th:id="${sub.id}">
-                            <td><input type="checkbox" th:class="table-row-checkbox" th:onclick="'selectCurrentRow(' + ${sub.id} + ')'"/></td>
-                            <td th:scope="row" th:text="${sub.id}">No</td>
-                            <td th:text="${sub.subscriptionId}" class="topic-name-cell">Subscription id</td>
-                            <td th:text="${sub.endpoint}">Endpoint</td>
-                            <td th:text="${sub.status}">Status</td>
-                            <td th:text="${sub.protocol}">Protocol</td>
-                            <td th:text="${sub.creationDate}">Creation date</td>
-                            <td th:text="${sub.topicId}">TopicID</td>
+                        <!-- use index to loop two arrays-->
+                        <tr th:each="index : ${#numbers.sequence( 0, #arrays.length(subs)-1)}" class="table-row" th:id="${subs[index].id}">
+                            <td><input type="checkbox" th:class="table-row-checkbox" th:onclick="'addFunToSubsBtn(' + ${subs[index].id} + ')'"/></td>
+                            <td th:scope="row" th:text="${subs[index].id}">No</td>
+                            <td th:text="${subs[index].subscriptionId}">Subscription id</td>
+                            <td th:text="${subs[index].endpoint}">Endpoint</td>
+                            <td th:text="${subs[index].status}">Status</td>
+                            <td th:text="${subs[index].protocol}">Protocol</td>
+                            <td th:text="${subs[index].creationDate}">Creation date</td>
+                            <td th:text="${names[index]}">TopicID</td>
                         </tr>
                         <tr>
                             <td><input type="checkbox"></td>
@@ -162,11 +100,11 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p class="modal-delete-tip"></p>
+                            <p class="modal-delete-tip">Do you really want to delete this subscription? <b>(Inrevocable)</b></p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                            <button type="button" class="btn btn-primary" onclick="window.location.href='/deleteOneTopic'">Yes</button>
+                            <button type="button" class="btn btn-primary" onclick="window.location.href='/deleteOneSub'">Yes</button>
                         </div>
                     </div>
                 </div>

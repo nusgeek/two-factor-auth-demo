@@ -25,6 +25,9 @@ public class Subscription {
     @Column(name = "create_date")
     private Timestamp creationDate;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
     @Column(name = "topic_id")
     private Integer topicId;
 
@@ -76,11 +79,33 @@ public class Subscription {
         this.creationDate = creationDate;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public Integer getTopicId() {
         return topicId;
     }
 
     public void setTopicId(Integer topicId) {
         this.topicId = topicId;
+    }
+
+    @Override
+    public String toString() {
+        return "Subscription{" +
+                "id=" + id +
+                ", subscriptionId='" + subscriptionId + '\'' +
+                ", endpoint='" + endpoint + '\'' +
+                ", status=" + status +
+                ", protocol='" + protocol + '\'' +
+                ", creationDate=" + creationDate +
+                ", isDeleted=" + isDeleted +
+                ", topicId=" + topicId +
+                '}';
     }
 }

@@ -23,6 +23,9 @@ public class Topic {
     @Column(name = "create_date")
     private Timestamp timestamp;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
     public Topic() {}
 
     public Integer getId() {
@@ -65,6 +68,14 @@ public class Topic {
         this.timestamp = timestamp;
     }
 
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @Override
     public String toString() {
         return "Topic{" +
@@ -73,6 +84,7 @@ public class Topic {
                 ", topicType='" + topicType + '\'' +
                 ", topicArn='" + topicArn + '\'' +
                 ", timestamp=" + timestamp +
+                ", is_deleted=" + isDeleted +
                 '}';
     }
 }

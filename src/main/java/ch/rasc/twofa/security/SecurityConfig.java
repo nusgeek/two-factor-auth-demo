@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             customizer
                     .antMatchers("/authenticate", "/signin", "/verify-totp",
                             "/verify-totp-additional-security", "/signup", "/signup-confirm-secret", "/test", "/signupme",
-                            "/jte/getUsers", "/jte/queryAll", "/invokejob", "/sendemail", "/Quartz", "/shutdown","/resume","/del")
+                            "/jte/getUsers", "/jte/queryAll", "/invokejob", "/sendemail", "/Quartz")
                     .permitAll().anyRequest().authenticated();
         }).logout().logoutRequestMatcher(new AntPathRequestMatcher("/signout")).logoutSuccessUrl("/");
 
