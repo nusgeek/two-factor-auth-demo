@@ -6,22 +6,26 @@
 </head>
 <body>
     <div layout:fragment="main-content">
-        <div th:class="${classes}" th:text="${msg}"></div>
+        <div class="table-box">
+            <h3>Details of <span th:text="${topic.topicName}"></span></h3>
+            <b>Topic Type: </b><p th:text="${topic.topicType}"></p>
+            <b>Topic Arn: </b><p th:text="${topic.topicArn}"></p>
+            <b>Topic Creation Time: </b><p th:text="${topic.timestamp}"></p>
+        </div>
         <div class="table-box">
             <div class="table-heading-container">
                 <div class="table-header">
                     <div class="table-header-title">
                         <span class="title-font">
-                            <span>Topic</span>
-                            (<span th:text="${topics.size()}"></span>)
+                            <span>Subscription</span>
+                            (<span th:text="${subs.size()}"></span>)
                         </span>
                     </div>
                     <div class="table-header-buttons btn-white-font">
-                        <a role="button" class="btn btn-success" href="/addFakeTopic">Add mockup</a>
-                        <a role="button" class="btn btn-primary disabled" id="topic-edit-button" onclick="toEditTopicPage()">Edit</a>
-                        <a role="button" class="btn btn-primary disabled"  id="topic-delete-button" data-toggle="modal" data-target="#staticBackdrop">Delete</a>
-                        <a role="button" class="btn btn-warning" onclick="toCreatTopicPage()">Create topic</a>
-<!--                        <input type="button" class="btn btn-warning" value="Create topic" onclick="toCreateTopicPage()"/>-->
+                        <a role="button" class="btn btn-primary disabled" id="subs-edit-button" onclick="toEditSubPage()">Edit</a>
+                        <a role="button" class="btn btn-primary disabled"  id="subs-delete-button" data-toggle="modal" data-target="#staticBackdrop">Delete</a>
+                        <a role="button" class="btn btn-warning" onclick="toCreateSubPage()">Create topic</a>
+                        <!--                        <input type="button" class="btn btn-warning" value="Create topic" onclick="toCreateTopicPage()"/>-->
                     </div>
                 </div>
                 <div class="table-pagination">
@@ -35,28 +39,34 @@
                         <tr>
                             <th scope="col"></th>
                             <th scope="col">NO.</th>
-                            <th scope="col">Topic Name</th>
-                            <th scope="col">Topic Type</th>
-                            <th scope="col">Topic Arn</th>
-                            <th scope="col">Creation Timestamp</th>
+                            <th scope="col">Subscription id</th>
+                            <th scope="col">Endpoint</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Protocol</th>
+                            <th scope="col">Creation date</th>
+                            <th scope="col">Topic</th>
                         </tr>
                         </thead>
                         <tbody th:remove="all-but-first">
-                        <tr th:each="topic : ${topics}" class="table-row" th:id="${topic.id}">
-                            <td><input type="radio" th:class="table-row-checkbox" th:onclick="'addFunToTopicBtn(' + ${topic.id} + ')'"/></td>
-                            <td th:scope="row" th:text="${topic.id}"></td>
-                            <td class="topic-name-cell">
-                                <a th:href="@{/topicDetail(id=${topic.id})}" th:text="${topic.topicName}" style="color: darkgreen;"></a>
-                            </td>
-                            <td th:text="${topic.topicType}">topic type</td>
-                            <td th:text="${topic.topicArn}">topic arn</td>
-                            <td th:text="${topic.timestamp}">timestamp</td>
+                        <!-- use index to loop two arrays -->
+                        <!-- judge subs.size is important-->
+                        <tr th:if="${subs.size() > 0}" th:each="index : ${#numbers.sequence( 0, #arrays.length(subs) - 1)}" class="table-row" th:id="${subs[index].id}">
+                            <td><input type="checkbox" th:class="table-row-checkbox" th:onclick="'addFunToSubsBtn(' + ${subs[index].id} + ')'"/></td>
+                            <td th:scope="row" th:text="${subs[index].id}">No</td>
+                            <td th:text="${subs[index].subscriptionId}">Subscription id</td>
+                            <td th:text="${subs[index].endpoint}">Endpoint</td>
+                            <td th:text="${subs[index].status}">Status</td>
+                            <td th:text="${subs[index].protocol}">Protocol</td>
+                            <td th:text="${subs[index].creationDate}">Creation date</td>
+                            <td th:text="${names[index]}">TopicID</td>
                         </tr>
                         <tr>
                             <td><input type="checkbox"></td>
                             <td scope="row">1</td>
                             <td>Mark</td>
                             <td>Otto</td>
+                            <td>@mdo</td>
+                            <td>@mdo</td>
                             <td>@mdo</td>
                             <td>@mdo</td>
                         </tr>
@@ -67,6 +77,8 @@
                             <td>Thornton</td>
                             <td>@fat</td>
                             <td>@fat</td>
+                            <td>@fat</td>
+                            <td>@fat</td>
                         </tr>
                         <tr>
                             <td><input type="checkbox"></td>
@@ -74,6 +86,8 @@
                             <td>Larry the Bird</td>
                             <td>Larry the </td>
                             <td>Larry</td>
+                            <td>@twitter</td>
+                            <td>@twitter</td>
                             <td>@twitter</td>
                         </tr>
                         </tbody>
@@ -92,11 +106,11 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p class="modal-delete-tip"></p>
+                            <p class="modal-delete-tip">Do you really want to delete this subscription? <b>(Inrevocable)</b></p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                            <button type="button" class="btn btn-primary" onclick="window.location.href='/deleteOneTopic'">Yes</button>
+                            <button type="button" class="btn btn-primary" onclick="window.location.href='/deleteOneSub'">Yes</button>
                         </div>
                     </div>
                 </div>

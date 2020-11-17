@@ -12,4 +12,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
     @Query("select s from Subscription s where s.isDeleted=false")
     ArrayList<Subscription> findAllNotDeleted();
 
+    @Query("select s from Subscription s where s.topicId = ?1 and s.isDeleted = false ")
+    ArrayList<Subscription> findAllByTopicId(Integer id);
+
 }

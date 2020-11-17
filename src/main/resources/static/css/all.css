@@ -126,6 +126,25 @@ a[data-toggle="collapse"] {
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
+.msg-div {
+    height: 40px;
+    margin-top: -20px;
+    color:white;
+    text-align:center;
+    line-height:40px;
+}
+
+.red-msg {
+    background-color: #cf2026;
+}
+
+.green-msg {
+    background-color: #19a219;
+}
+
+.orange-msg {
+    background-color: #d9a022;
+}
 
 #content {
     width: calc(100% - 250px);

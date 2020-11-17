@@ -7,6 +7,7 @@
 </head>
 <body>
     <div layout:fragment="main-content">
+        <div th:class="${classes}" th:text="${msg}"></div>
         <div class="table-box">
             <div class="table-heading-container">
                 <div class="table-header">
@@ -17,9 +18,10 @@
                         </span>
                     </div>
                     <div class="table-header-buttons btn-white-font">
+                        <a role="button" class="btn btn-success" href="/addFakeSubs">Add mockup</a>
                         <a role="button" class="btn btn-primary disabled" id="subs-edit-button" onclick="toEditSubPage()">Edit</a>
                         <a role="button" class="btn btn-primary disabled"  id="subs-delete-button" data-toggle="modal" data-target="#staticBackdrop">Delete</a>
-                        <a role="button" class="btn btn-warning" onclick="toCreateSubPage()">Create topic</a>
+                        <a role="button" class="btn btn-warning" onclick="toCreateSubPage()">Create Subscription</a>
 <!--                        <input type="button" class="btn btn-warning" value="Create topic" onclick="toCreateTopicPage()"/>-->
                     </div>
                 </div>
@@ -43,9 +45,10 @@
                         </tr>
                         </thead>
                         <tbody th:remove="all-but-first">
-                        <!-- use index to loop two arrays-->
-                        <tr th:each="index : ${#numbers.sequence( 0, #arrays.length(subs)-1)}" class="table-row" th:id="${subs[index].id}">
-                            <td><input type="checkbox" th:class="table-row-checkbox" th:onclick="'addFunToSubsBtn(' + ${subs[index].id} + ')'"/></td>
+                         <!-- use index to loop two arrays -->
+                         <!-- judge subs.size is important-->
+                        <tr th:if="${subs.size() > 0}" th:each="index : ${#numbers.sequence( 0, #arrays.length(subs) - 1)}" class="table-row" th:id="${subs[index].id}">
+                            <td><input type="radio" th:class="table-row-checkbox" th:onclick="'addFunToSubsBtn(' + ${subs[index].id} + ')'"/></td>
                             <td th:scope="row" th:text="${subs[index].id}">No</td>
                             <td th:text="${subs[index].subscriptionId}">Subscription id</td>
                             <td th:text="${subs[index].endpoint}">Endpoint</td>

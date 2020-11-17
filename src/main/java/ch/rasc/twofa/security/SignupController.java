@@ -93,7 +93,7 @@ public class SignupController {
     user.setDetail(detail);
     userRepository.save(user);
 
-    return new ModelAndView("signup_success", model);
+    return new ModelAndView("signinup/signup_success", model);
   }
 
   @PostMapping("/signup-confirm-secret")
@@ -112,14 +112,14 @@ public class SignupController {
         userRepository.save(user);
 //        this.dsl.update(APP_USER).set(APP_USER.ENABLED, true)
 //            .where(APP_USER.ID.eq(record.get(APP_USER.ID))).execute();
-        return new ModelAndView("signup_success");
+        return new ModelAndView("signinup/signup_success");
       }
     }
     Map<String, Object> model = new HashMap<>();
     model.put("secret", "otpauth://totp/" + username + "?secret=" + user.getSecret() + "&issuer=2fademo");
     model.put("alert", "please use Google Authenticator, scan QR code again and input correct 6 digits");
     model.put("username", username);
-    return new ModelAndView("signup_secret",model);
+    return new ModelAndView("signinup/signup_secret",model);
   }
 
 }

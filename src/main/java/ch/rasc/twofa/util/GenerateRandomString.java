@@ -1,6 +1,7 @@
 package ch.rasc.twofa.util;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class GenerateRandomString {
 
@@ -20,7 +21,6 @@ public class GenerateRandomString {
         }
         return sb.toString();
     }
-
     public static String getOne() {
         return generateRandomString(len, asciiChars);
     }

@@ -53,12 +53,12 @@ function addFunToTopicBtn(id) {
     $(".topic-delete-modal .modal-footer button[onclick]").attr("onclick", "window.location.href='" + "/deleteOneTopic?id=" + id + "'");
 
     // transmit id to editOneTopic function
-    $(".table-header-buttons a[onclick]").attr("onclick", "toEditTopicPage(" + id + ")");
+    $("#topic-edit-button").attr("onclick", "toEditTopicPage(" + id + ")");
 }
 
 function toEditTopicPage(id) {
         let oneTr = $("#" + id);
-        let name = $(oneTr).find('td:eq(2)').text(),
+        let name = $(oneTr).find('td:eq(2)').text().trim(),
             type = $(oneTr).find('td:eq(3)').text(),
             arn = $(oneTr).find('td:eq(4)').text();
         $.ajax({
@@ -77,7 +77,7 @@ function addFunToSubsBtn(id) {
 
     $(".topic-delete-modal .modal-footer button[onclick]").attr("onclick", "window.location.href='" + "/deleteOneSub?id=" + id + "'");
 
-    $(".table-header-buttons a[onclick]").attr("onclick", "toEditSubPage(" + id + ")");
+    $("#subs-edit-button ").attr("onclick", "toEditSubPage(" + id + ")");
 }
 
 function toEditSubPage(id) {

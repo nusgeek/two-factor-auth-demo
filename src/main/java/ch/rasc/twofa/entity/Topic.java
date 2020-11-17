@@ -3,6 +3,8 @@ package ch.rasc.twofa.entity;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+import lombok.Builder;
+
 @Entity
 @Table(name = "topic")
 public class Topic {

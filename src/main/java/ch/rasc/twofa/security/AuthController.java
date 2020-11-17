@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -27,6 +28,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 public class AuthController {
+
+  @Resource(name = "userInSession")
+  User userInSession;
 
   private final static String USER_AUTHENTICATION_OBJECT = "USER_AUTHENTICATION_OBJECT";
 
@@ -87,8 +91,8 @@ public class AuthController {
   }
 
   @PostMapping("/signin")
-  public ModelAndView login(@RequestParam String username,
-                            @RequestParam String password, HttpSession httpSession) throws Exception {
+  public ModelAndView login(@RequestParam String username, @RequestParam String password,
+                            HttpSession httpSession, Model model) throws Exception {
     Map<String, Object> map = new HashMap<>();
     User user = userRepository.findByUsername(username);
 
@@ -113,10 +117,14 @@ public class AuthController {
         httpSession.setMaxInactiveInterval(3600);
         /* record login time*/
         recordUserLogin(detail);
-        map = returnViewPara(detail);
-
+//        map = returnViewPara(detail);
+//        model.addAttribute("username", detail.getUsername());
+//        model.addAttribute("role_name", detail.getRoleName());
+        userInSession.setUsername(detail.getUsername());
+        userInSession.setRoleName(detail.getRoleName());
         /* transfer data to frontend*/
-        return new ModelAndView("main", map);
+//        return new ModelAndView("main", map);
+        return new ModelAndView("main", "user", userInSession);
       }
     }
     else {

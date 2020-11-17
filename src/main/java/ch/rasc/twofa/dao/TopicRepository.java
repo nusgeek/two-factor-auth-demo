@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Integer> {
@@ -21,9 +22,12 @@ public interface TopicRepository extends JpaRepository<Topic, Integer> {
 //    @Query("update Topic t set t.isDeleted = true where t.id=:id")
 //    void deleteByIdSelf(@Param("id")Integer id);
 
-    @Query("select t.topicArn from Topic t")
+    @Query("select t.topicArn from Topic t where t.isDeleted = false")
     ArrayList<String> findAllTopicArn();
 
     @Query("select t.id from Topic t where t.topicArn = ?1")
     Integer findIdByTopicArn(String topicArn);
+
+    @Query("select t.id from Topic t where t.isDeleted = false")
+    ArrayList<Integer> findAllIds();
 }
