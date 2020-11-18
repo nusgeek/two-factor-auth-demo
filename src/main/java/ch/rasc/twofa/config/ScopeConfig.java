@@ -1,16 +1,16 @@
 package ch.rasc.twofa.config;
 
-import ch.rasc.twofa.entity.User;
+import ch.rasc.twofa.util.UserInfoGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.context.annotation.SessionScope;
+import org.springframework.web.context.annotation.RequestScope;
 
 @Configuration
 public class ScopeConfig {
 
     @Bean
-    @SessionScope
-    public User userInSession() {
-        return new User();
+    @RequestScope
+    public UserInfoGenerator sessionScopedBean() {
+        return new UserInfoGenerator();
     }
 }

@@ -6,7 +6,6 @@ import ch.rasc.twofa.dao.SubscriptionRepository;
 import ch.rasc.twofa.dao.TopicRepository;
 import ch.rasc.twofa.entity.Subscription;
 import ch.rasc.twofa.entity.Topic;
-import ch.rasc.twofa.util.GenerateRandomString;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -14,6 +13,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 @Controller
 public class MockupUtils {
@@ -72,7 +72,7 @@ public class MockupUtils {
         String protocol = SubscriptionController.PROTOCOL.get(Integer.parseInt(randStr)%6);
 
         Subscription subscription = new Subscription();
-        subscription.setSubscriptionId(GenerateRandomString.getOne());
+        subscription.setSubscriptionId(UUID.randomUUID().toString());
         subscription.setProtocol(protocol);
         subscription.setStatus(true);
         subscription.setEndpoint(SubscriptionController.ENDPOINT_MAP.get(protocol) + randStr);

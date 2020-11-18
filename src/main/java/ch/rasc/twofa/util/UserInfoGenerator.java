@@ -2,7 +2,7 @@ package ch.rasc.twofa.util;
 
 public class UserInfoGenerator {
     private String userName;
-    private String position;
+    private String roleName;
 
     public String getUserName() {
         return userName;
@@ -12,11 +12,11 @@ public class UserInfoGenerator {
         this.userName = userName;
     }
 
-    public String getPosition() {
-        return position;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

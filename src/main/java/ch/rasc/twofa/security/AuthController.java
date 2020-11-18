@@ -15,6 +15,7 @@ import ch.rasc.twofa.dao.UserLogRepository;
 import ch.rasc.twofa.dao.UserRepository;
 import ch.rasc.twofa.entity.User;
 import ch.rasc.twofa.entity.UserLog;
+import ch.rasc.twofa.util.UserInfoGenerator;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,8 +30,8 @@ import org.springframework.web.servlet.view.RedirectView;
 @RestController
 public class AuthController {
 
-  @Resource(name = "userInSession")
-  User userInSession;
+  @Resource(name = "sessionScopedBean")
+  UserInfoGenerator sessionScopedBean;
 
   private final static String USER_AUTHENTICATION_OBJECT = "USER_AUTHENTICATION_OBJECT";
 
@@ -60,8 +61,9 @@ public class AuthController {
 
   @GetMapping("/home")
   public ModelAndView home(Model model) {
-
-    return new ModelAndView("main");
+    model.addAttribute("userName", sessionScopedBean.getUserName());
+    model.addAttribute("roleName", sessionScopedBean.getRoleName());
+    return new ModelAndView("main", "user", model);
   }
 
   @GetMapping("/authenticate")
@@ -117,14 +119,13 @@ public class AuthController {
         httpSession.setMaxInactiveInterval(3600);
         /* record login time*/
         recordUserLogin(detail);
-//        map = returnViewPara(detail);
-//        model.addAttribute("username", detail.getUsername());
-//        model.addAttribute("role_name", detail.getRoleName());
-        userInSession.setUsername(detail.getUsername());
-        userInSession.setRoleName(detail.getRoleName());
-        /* transfer data to frontend*/
-//        return new ModelAndView("main", map);
-        return new ModelAndView("main", "user", userInSession);
+
+        sessionScopedBean.setUserName(detail.getUsername());
+        sessionScopedBean.setRoleName(detail.getRoleName());
+        model.addAttribute("userName", sessionScopedBean.getUserName());
+        model.addAttribute("roleName", sessionScopedBean.getRoleName());
+
+        return new ModelAndView("main", "user", model);
       }
     }
     else {
@@ -133,15 +134,6 @@ public class AuthController {
     map.put("reminder", "username or password is not correct");
     return new ModelAndView("signinup/signin", map);
   }
-//
-//  @GetMapping("/home")
-//  public ModelAndView home(String role_name, String detail, String username) {
-//    Map<String, String> model = new HashMap<>();
-//    model.put("username", username);
-//    model.put("role_name", role_name);
-//    model.put("detail", detail);
-//    return new ModelAndView("header.html", model);
-//  }
 
   @PostMapping("/verify-totp")
   public ModelAndView totp(@RequestParam String code,

@@ -3,7 +3,7 @@ package ch.rasc.twofa.controller.sns;
 import ch.rasc.twofa.dao.SubscriptionRepository;
 import ch.rasc.twofa.dao.TopicRepository;
 import ch.rasc.twofa.entity.Subscription;
-import ch.rasc.twofa.util.GenerateRandomString;
+import ch.rasc.twofa.util.UserInfoGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -20,6 +21,9 @@ import static java.util.Map.entry;
 
 @Controller
 public class SubscriptionController {
+
+    @Resource(name = "sessionScopedBean")
+    UserInfoGenerator sessionScopedBean;
 
     public static final List<String> PROTOCOL = Arrays.asList("HTTP", "HTTPS", "Email", "SNS", "Amazon SQS",
             "AWS Lambda");
@@ -46,13 +50,20 @@ public class SubscriptionController {
     }
 
     @GetMapping("/subs")
-    public String subscription(Model model, @ModelAttribute("classes") String classes, @ModelAttribute("msg") String msg) {
+    public String subscription(Model model, @ModelAttribute("classes") String classes,
+                               @ModelAttribute("msg") String msg) {
         ArrayList<Subscription> subscriptions = subscriptionRepository.findAllNotDeleted();
         List<String> topicNames = getTopicNamesOfSubs(subscriptions);
         model.addAttribute("subs", subscriptions);
         model.addAttribute("names", topicNames);
         model.addAttribute("classes", classes);
         model.addAttribute("msg", msg);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("userName", sessionScopedBean.getUserName());
+        map.put("roleName", sessionScopedBean.getRoleName());
+        model.addAttribute("user", map);
+
         return "sns/sns_subs";
     }
 
@@ -67,7 +78,7 @@ public class SubscriptionController {
 
     @PostMapping("/addOneSub")
     public String addOneSub(@RequestParam String topicArnSelector, @RequestParam String subProtocol,
-                            @RequestParam String subEndpoint, RedirectAttributes redirectAttributes) {
+                            @RequestParam String subEndpoint, RedirectAttributes redirectAttributes, Model model) {
 
         Timestamp timestamp = new Timestamp(new Date().getTime());
         String subscriptionId = UUID.randomUUID().toString();

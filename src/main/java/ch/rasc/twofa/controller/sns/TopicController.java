@@ -4,22 +4,23 @@ import ch.rasc.twofa.dao.SubscriptionRepository;
 import ch.rasc.twofa.dao.TopicRepository;
 import ch.rasc.twofa.entity.Subscription;
 import ch.rasc.twofa.entity.Topic;
-import com.amazonaws.services.s3.model.ObjectListing;
-import org.jooq.tools.StringUtils;
+import ch.rasc.twofa.util.UserInfoGenerator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.*;
 
 @Controller
 public class TopicController {
+
+    @Resource(name = "sessionScopedBean")
+    UserInfoGenerator sessionScopedBean;
 
     public static final List<String> TOPIC_TYPE = Arrays.asList("Standard", "FIFO");
 
@@ -33,6 +34,8 @@ public class TopicController {
         this.subscriptionRepository = subscriptionRepository;
     }
 
+//    @ModelAttribute(name = "sessionScopedBean")
+
     @GetMapping("/topic")
     public String showTopic(Model model, @ModelAttribute("classes") String classes,
                             @ModelAttribute("msg") String msg) throws ParseException {
@@ -40,6 +43,11 @@ public class TopicController {
         model.addAttribute("classes", classes);
         model.addAttribute("msg", msg);
         model.addAttribute("topics", topicRepository.findAllNotDeleted());
+
+        Map<String, String> map = new HashMap<>();
+        map.put("userName", sessionScopedBean.getUserName());
+        map.put("roleName", sessionScopedBean.getRoleName());
+        model.addAttribute("user",map);
         return "sns/sns_topic";
     }
 
@@ -49,10 +57,8 @@ public class TopicController {
     }
 
     @PostMapping("/toEditTopicPage")
-    public ModelAndView toEditTopicPage(@RequestParam String topicName,
-                                        @RequestParam String topicType,
-                                        @RequestParam String topicArn,
-                                        @RequestParam Integer id,
+    public ModelAndView toEditTopicPage(@RequestParam String topicName, @RequestParam String topicType,
+                                        @RequestParam String topicArn, @RequestParam Integer id,
                                         Model model) {
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("topicName", topicName);
@@ -60,8 +66,11 @@ public class TopicController {
         dataModel.put("topicArn", topicArn);
         dataModel.put("id", id);
         model.addAttribute("types", TopicController.TOPIC_TYPE);
+        model.addAttribute("userName", sessionScopedBean.getUserName());
+        model.addAttribute("roleName", sessionScopedBean.getRoleName());
         return new ModelAndView("sns/sns_topic_edit", dataModel);
     }
+
 
     @RequestMapping("/topicDetail")
     public String toTopicDetailPage(@RequestParam Integer id, Model model) {
@@ -76,14 +85,18 @@ public class TopicController {
         model.addAttribute("subs", subscriptions);
         model.addAttribute("names", names);
 
+        Map<String, String> map = new HashMap<>();
+        map.put("userName", sessionScopedBean.getUserName());
+        map.put("roleName", sessionScopedBean.getRoleName());
+        model.addAttribute("user", map);
+
         return "sns/sns_topic_detail";
     }
 
+
     @PostMapping("/addOneTopic")
-    public String addOneTopic(@RequestParam String topicName,
-                              @RequestParam String topicType,
-                              @RequestParam String topicArn,
-                              RedirectAttributes redirectAttributes) {
+    public String addOneTopic(@RequestParam String topicName, @RequestParam String topicType,
+                              @RequestParam String topicArn, RedirectAttributes redirectAttributes) {
         Timestamp timestamp = new Timestamp(new Date().getTime());
         Topic topic = new Topic();
         topic.setTopicName(topicName);
