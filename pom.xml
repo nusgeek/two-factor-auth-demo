@@ -158,10 +158,19 @@ by ensuring that the pom.xml file contains the following.-->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<!--validation-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>jquery-validation</artifactId>
+			<version>1.19.0</version>
+		</dependency>
+
+
+
 		<!-- jOOQ to access the user information from database-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

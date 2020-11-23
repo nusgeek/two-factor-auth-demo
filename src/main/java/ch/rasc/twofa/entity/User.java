@@ -2,6 +2,8 @@ package ch.rasc.twofa.entity;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "user")
@@ -10,6 +12,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "User name can not be blank")
+    @Size(min = 6, max = 30)
     @Column(name = "username")
     private String username;
 

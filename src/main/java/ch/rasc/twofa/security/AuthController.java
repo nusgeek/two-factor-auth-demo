@@ -80,6 +80,8 @@ public class AuthController {
       map.put("role_name", appUserDetail.getRoleName());
       map.put("detail", appUserDetail.getDetail());
 
+      String name = sessionScopedBean.getUserName();
+
       model.addAttribute("info", map);
       return new RedirectView("/home");
     }
@@ -116,7 +118,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(userAuthentication);
         /*set httpSession timeout -- time unit: second*/
-        httpSession.setMaxInactiveInterval(3600);
+        httpSession.setMaxInactiveInterval(120);
         /* record login time*/
         recordUserLogin(detail);
 

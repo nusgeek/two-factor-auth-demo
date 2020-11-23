@@ -1,5 +1,6 @@
 package ch.rasc.twofa.security;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import ch.rasc.twofa.dao.UserRepository;
@@ -47,6 +48,7 @@ public class SignupController {
   @PostMapping("/signup")
   public ModelAndView signup(@RequestParam("username") @NotEmpty String username,
                              @RequestParam("password") @NotEmpty String password,
+                             @RequestParam("comfirm_password") @NotEmpty String comfirm_password,
                              @RequestParam("role_name") String role_name,
                              @RequestParam("detail") String detail,
                              @RequestParam("totp") boolean totp) {

@@ -138,6 +138,10 @@ a[data-toggle="collapse"] {
     background-color: #cf2026;
 }
 
+.error {
+    color: #cf2026;
+}
+
 .green-msg {
     background-color: #19a219;
 }

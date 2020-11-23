@@ -54,13 +54,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf(customizer -> customizer.disable()).authorizeRequests(customizer -> {
             customizer
                     .antMatchers("/authenticate", "/signin", "/verify-totp",
-                            "/verify-totp-additional-security", "/signup", "/signup-confirm-secret", "/test", "/signupme",
-                            "/jte/getUsers", "/jte/queryAll", "/invokejob", "/sendemail", "/Quartz")
+                            "/verify-totp-additional-security", "/signup", "/signup-confirm-secret")
                     .permitAll().anyRequest().authenticated();
         }).logout().logoutRequestMatcher(new AntPathRequestMatcher("/signout")).logoutSuccessUrl("/");
 
 //                logout(customizer -> customizer
 //                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()));
+
+        http.sessionManagement()
+                .invalidSessionUrl("/signin");
+
     }
 
     @Override

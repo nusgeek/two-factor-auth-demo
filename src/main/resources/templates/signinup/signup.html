@@ -10,12 +10,11 @@
     </head>
     <body class="body-signin">
         <div class="container">
-            <form class="form-signin" method="post" action="/signup">
+            <form class="form-signin" id="signupForm" method="post" action="/signup">
                 <h2 class="form-signin-heading">Please sign up</h2>
                 <input type="text" class="input-block-level" placeholder="Username" name="username"><br>
-                <span th:text="${status}" class="reminder"></span>
-                <input type="password" class="input-block-level" placeholder="Password" name="password"><br>
-                <span th:text="${password}" class="reminder"></span>
+                <input type="password" class="input-block-level" placeholder="Password" name="password" id="password"><br>
+                <input type="password" class="input-block-level" placeholder="Comfirm Password" name="comfirm_password"><br>
                 <input type="text" class="input-block-level" placeholder="Role name" name="role_name"><br>
                 <textarea type="text" class="input-block-level" placeholder="Self introduction" name="detail" rows="8" cols="28"></textarea><br>
                 <input type="checkbox"  name="totp" class="checkBox" id="checkbox"/>
@@ -27,4 +26,58 @@
             </form>
         </div>
     </body>
+    <script src="/webjars/jquery-validation/1.19.0/dist/jquery.validate.min.js"></script>
+    <script src="/webjars/jquery-validation/1.19.0/dist/additional-methods.min.js"></script>
+    <script>
+        $().ready(function() {
+            /* detected by attribute -- name, in html*/
+            $("#signupForm").validate({
+                rules: {
+                    username: {
+                        required: true,
+                        minlength: 6,
+                        maxlength: 30
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8,
+                        maxlength: 20
+                    },
+                    comfirm_password: {
+                        required: true,
+                        minlength: 8,
+                        maxlength: 20,
+                        equalTo: "#password"
+                    },
+                    role_name: {
+                        required: true
+                    },
+                    detail: {
+                        required: true,
+                        minlength: 20
+                    }
+                },
+                messages: {
+                    username: {
+                        required: "Please input username",
+                        minlength: "Username requires at least 6 characters"
+                    },
+                    password: {
+                        required: "Please input your password",
+                        minlength: "Password can't be less than 8 characters"
+                    },
+                    confirm_password: {
+                        required: "Please input your password",
+                        minlength: "Password can't be less than 8 characters",
+                        equalTo: "Password must be same as previous one"
+                    },
+                    role_name: "Please input your role name",
+                    detail: {
+                        required: "Please input your self introduction",
+                        minlength: "Tell us more about yourself"
+                    }
+                }
+            });
+        });
+    </script>
 </html>

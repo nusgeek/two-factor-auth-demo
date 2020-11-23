@@ -34,8 +34,6 @@ public class TopicController {
         this.subscriptionRepository = subscriptionRepository;
     }
 
-//    @ModelAttribute(name = "sessionScopedBean")
-
     @GetMapping("/topic")
     public String showTopic(Model model, @ModelAttribute("classes") String classes,
                             @ModelAttribute("msg") String msg) throws ParseException {
