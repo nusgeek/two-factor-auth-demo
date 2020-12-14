@@ -138,8 +138,7 @@ public class AuthController {
   }
 
   @PostMapping("/verify-totp")
-  public ModelAndView totp(@RequestParam String code,
-      HttpSession httpSession, Model model) {
+  public ModelAndView totp(@RequestParam String code, HttpSession httpSession, Model model) {
     Map<String, Object> map = new HashMap<>();
     /*The /verify-totp receives the TOTP code and checks if an AppUserAuthentication instance is stored in the HTTP session.*/
     AppUserAuthentication userAuthentication = (AppUserAuthentication) httpSession
@@ -152,7 +151,7 @@ public class AuthController {
     /*handler has to check if the user is in "additional verification" mode.*/
     AppUserDetail detail = (AppUserDetail) userAuthentication.getPrincipal();
     if (isUserInAdditionalSecurityMode(detail.getAppUserId())) {
-      return new ModelAndView("signin_additional_check");
+      return new ModelAndView("signinup/signin_additional_check");
     }
 
     String secret = ((AppUserDetail) userAuthentication.getPrincipal()).getSecret();
@@ -164,12 +163,12 @@ public class AuthController {
         recordUserLogin(detail);
         /* transfer data to frontend*/
         map = returnViewPara(detail);
-        model.addAttribute("info", map);
+        model.addAttribute("user", map);
         return new ModelAndView("main");
       }
 
       setAdditionalSecurityFlag(detail.getAppUserId());
-      return new ModelAndView("signin_additional_check");
+      return new ModelAndView("signinup/signin_additional_check");
     }
 
     map.put("noAuth", "Please re-signin");
@@ -285,7 +284,7 @@ public class AuthController {
 
   private Map<String, Object> returnViewPara(AppUserDetail detail) {
     Map<String, Object> map = new HashMap<>();
-    map.put("username", detail.getUsername());
+    map.put("userName", detail.getUsername());
     map.put("role_name", detail.getRoleName());
     map.put("detail", detail.getDetail());
     return map;

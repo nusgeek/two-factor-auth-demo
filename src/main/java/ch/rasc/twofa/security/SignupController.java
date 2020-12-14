@@ -83,7 +83,7 @@ public class SignupController {
 
       model.put("secret", "otpauth://totp/" + username + "?secret=" + secret + "&issuer=2fademo");
       model.put("username", username);
-      return new ModelAndView("signup_secret", model);
+      return new ModelAndView("signinup/signup_secret", model);
     }
 
     user.setUsername(username);
