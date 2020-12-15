@@ -32,6 +32,7 @@ import java.util.Properties;
 public class AutoEmailJob extends QuartzJobBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( AutoEmailJob.class );
+    private final String email = "iwuters@gmail.com";
 
     @Autowired
     private UserRepository userRepository;
@@ -44,7 +45,6 @@ public class AutoEmailJob extends QuartzJobBean {
     {
         LOGGER.info( "Executing Job with key {}", context.getJobDetail().getKey() );
         try {
-            String email = "hihearay@gmail.com";
             sendmail(email);
             LOGGER.info( "Email has been sent to {}", email );
         } catch (MessagingException e) {
@@ -70,16 +70,16 @@ public class AutoEmailJob extends QuartzJobBean {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 
         ArrayList<UserLog> userLogList = userLogRepository.findByLoginTimeBetween(tStart, tEnd);
-        generateCsvFile(userLogList, "src/main/resources/static/",
+        generateCsvFile(userLogList,
                 "Login log between " + formatter.format(tStart) + " and " + formatter.format(tEnd) + ".csv");
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("iwuters@gmail.com", "Iam123,.");
+                return new PasswordAuthentication(email, "Iam123,.");
             }
         });
         Message msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress("iwuters@gmail.com", false));
+        msg.setFrom(new InternetAddress(email, false));
 
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
         msg.setSubject("Login log for users from " + formatter.format(tStart) + " to " + formatter.format(tEnd));
@@ -107,8 +107,8 @@ public class AutoEmailJob extends QuartzJobBean {
     }
 
 
-    private void generateCsvFile(ArrayList<UserLog> userLogList, String outputPath, String fileName) throws IOException {
-        File file = new File(outputPath + fileName);
+    private void generateCsvFile(ArrayList<UserLog> userLogList, String fileName) throws IOException {
+        File file = new File("src/main/resources/static/" + fileName);
         try (OutputStreamWriter ow =
                      new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             ow.write("username, rolename, 2FA status, login time\n");
