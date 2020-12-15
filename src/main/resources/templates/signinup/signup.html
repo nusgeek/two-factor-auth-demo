@@ -28,7 +28,15 @@
     </body>
     <script src="/webjars/jquery-validation/1.19.0/dist/jquery.validate.min.js"></script>
     <script src="/webjars/jquery-validation/1.19.0/dist/additional-methods.min.js"></script>
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const passDic = {
+            "minLen": /*[[${minLen}]]*/ 8,
+            "minUppercaseNum": /*[[${minUppercaseNum}]]*/ 1,
+            "minLowercaseNum": /*[[${minLowercaseNum}]]*/ 1,
+            "minSpecialCharNum": /*[[${minSpecialCharNum}]]*/ 1,
+            "minDigitNum": /*[[${minDigitNum}]]*/ 1
+        }
         $().ready(function() {
             /* detected by attribute -- name, in html*/
             $("#signupForm").validate({
@@ -40,13 +48,15 @@
                     },
                     password: {
                         required: true,
-                        minlength: 8,
-                        maxlength: 20
+                        minlength: passDic["minLen"],
+                        maxlength: 20,
+                        minUppercaseNum: true,
+                        minLowercaseNum: true,
+                        minDigitNum: true,
+                        minSpecialCharNum: true
                     },
                     comfirm_password: {
                         required: true,
-                        minlength: 8,
-                        maxlength: 20,
                         equalTo: "#password"
                     },
                     role_name: {
@@ -64,11 +74,10 @@
                     },
                     password: {
                         required: "Please input your password",
-                        minlength: "Password can't be less than 8 characters"
+                        minlength: "Password can't be less than " + passDic["minLen"] + " characters"
                     },
                     confirm_password: {
                         required: "Please input your password",
-                        minlength: "Password can't be less than 8 characters",
                         equalTo: "Password must be same as previous one"
                     },
                     role_name: "Please input your role name",
@@ -79,5 +88,31 @@
                 }
             });
         });
+
+        function checkPassword(value, regex, length) {
+            let newValue = value.replace(regex, "");
+            return value.length - newValue.length >= length
+        }
+
+        $.validator.addMethod("minDigitNum", function(value, element) {
+            const regex = /[0-9]/g;
+            return this.optional(element) || (checkPassword(value, regex, passDic["minDigitNum"]));
+        }, "Must contain at least " + passDic["minDigitNum"] + " digit.");
+
+        $.validator.addMethod("minUppercaseNum", function(value, element) {
+            const regex = /[A-Z]/g;
+            return this.optional(element) || (checkPassword(value, regex, passDic["minUppercaseNum"]));
+        }, "Must contain at least one " + passDic["minUppercaseNum"] + " uppercase character.");
+
+        $.validator.addMethod("minLowercaseNum", function(value, element) {
+            const regex = /[a-z]/g;
+            return this.optional(element) || (checkPassword(value, regex, passDic["minLowercaseNum"]));
+        }, "Must contain at least " + passDic["minLowercaseNum"] + " lowercase character.");
+
+        $.validator.addMethod("minSpecialCharNum", function(value, element) {
+            const regex = /[^a-zA-Z0-9\s]/g;
+            return this.optional(element) || (checkPassword(value, regex, passDic["minSpecialCharNum"]));
+        }, "Must contain at least " + passDic["minSpecialCharNum"] + " special character.");
+        /*]]>*/
     </script>
 </html>

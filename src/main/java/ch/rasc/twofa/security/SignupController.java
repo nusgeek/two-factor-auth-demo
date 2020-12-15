@@ -1,6 +1,5 @@
 package ch.rasc.twofa.security;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import ch.rasc.twofa.dao.UserRepository;
@@ -9,7 +8,10 @@ import org.jboss.aerogear.security.otp.Totp;
 import org.jboss.aerogear.security.otp.api.Base32;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@Controller
 public class SignupController {
 
   private final PasswordEncoder passwordEncoder;
@@ -30,6 +32,11 @@ public class SignupController {
   private final DSLContext dsl;
 
   private final PasswordPolicy passwordPolicy;
+
+
+
+  @Value("${password.minUppercaseNum}")
+  private int minUppercaseNum;
 
   public SignupController(PasswordEncoder passwordEncoder, PasswordPolicy passwordPolicy,
       DSLContext dsl) {
@@ -41,8 +48,18 @@ public class SignupController {
   private UserRepository userRepository;
 
   @GetMapping("/signup")
-  public ModelAndView signupRedirect() {
-    return new ModelAndView("signinup/signup");
+  public String signupRedirect(Model model,
+                                     @Value("${password.minLen}") Integer minLen,
+                                     @Value("${password.minUppercaseNum}") Integer minUppercaseNum,
+                                     @Value("${password.minLowercaseNum}") Integer minLowercaseNum,
+                                     @Value("${password.minSpecialCharNum}") Integer minSpecialCharNum,
+                                     @Value("${password.minDigitNum}") Integer minDigitNum) {
+    model.addAttribute("minLen", minLen)
+            .addAttribute("minUppercaseNum", minUppercaseNum)
+            .addAttribute("minLowercaseNum", minLowercaseNum)
+            .addAttribute("minSpecialCharNum", minSpecialCharNum)
+            .addAttribute("minDigitNum", minDigitNum);
+    return "signinup/signup";
   }
 
   @PostMapping("/signup")
@@ -69,30 +86,25 @@ public class SignupController {
       return new ModelAndView("signinup/signup", model);
     }
 
+    user.setUsername(username);
+    user.setPassword(this.passwordEncoder.encode(password));
+    user.setAdditionalSecurity(false);
+    user.setRoleName(role_name);
+    user.setDetail(detail);
+
     if (totp) {
       String secret = Base32.random();
-
-      user.setUsername(username);
-      user.setPassword(this.passwordEncoder.encode(password));
       user.setEnabled(false);
-      user.setAdditionalSecurity(false);
       user.setSecret(secret);
-      user.setRoleName(role_name);
-      user.setDetail(detail);
       userRepository.save(user);
-
       model.put("secret", "otpauth://totp/" + username + "?secret=" + secret + "&issuer=2fademo");
       model.put("username", username);
       return new ModelAndView("signinup/signup_secret", model);
     }
 
-    user.setUsername(username);
     user.setPassword(this.passwordEncoder.encode(password));
     user.setEnabled(true);
-    user.setAdditionalSecurity(false);
     user.setSecret(null);
-    user.setRoleName(role_name);
-    user.setDetail(detail);
     userRepository.save(user);
 
     return new ModelAndView("signinup/signup_success", model);
