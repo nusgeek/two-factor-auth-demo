@@ -25,6 +25,7 @@
 		<aws.java.sdk.version>2.13.7</aws.java.sdk.version>
 		<bootstrap.version>4.3.1</bootstrap.version>
 		<jquery.version>3.5.1</jquery.version>
+		<spring-cloud.version>Hoxton.SR6</spring-cloud.version>
 	</properties>
 <!--If you created your Maven project in a different way, configure the latest version of the SDK for your project
 by ensuring that the pom.xml file contains the following.-->
@@ -45,10 +46,29 @@ by ensuring that the pom.xml file contains the following.-->
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
+		<!-- spring cloud client -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+
 		<!--添加热部署-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

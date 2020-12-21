@@ -15,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.passpol.PasswordPolicy;
 import com.codahale.passpol.Status;
@@ -33,10 +32,21 @@ public class SignupController {
 
   private final PasswordPolicy passwordPolicy;
 
+  @Value("${password.minLen: 8 default}")
+  private Integer minLen;
 
+  @Value("${password.minUppercaseNum: 1 default}")
+  public Integer minUppercaseNum;
 
-  @Value("${password.minUppercaseNum}")
-  private int minUppercaseNum;
+  @Value("${password.minLowercaseNum: 1 default}")
+  public Integer minLowercaseNum;
+
+  @Value("${password.minSpecialCharNum: 1 default}")
+  public Integer minSpecialCharNum;
+
+  @Value("${password.minDigitNum: 1 default}")
+  public Integer minDigitNum;
+
 
   public SignupController(PasswordEncoder passwordEncoder, PasswordPolicy passwordPolicy,
       DSLContext dsl) {
@@ -48,12 +58,7 @@ public class SignupController {
   private UserRepository userRepository;
 
   @GetMapping("/signup")
-  public String signupRedirect(Model model,
-                                     @Value("${password.minLen}") Integer minLen,
-                                     @Value("${password.minUppercaseNum}") Integer minUppercaseNum,
-                                     @Value("${password.minLowercaseNum}") Integer minLowercaseNum,
-                                     @Value("${password.minSpecialCharNum}") Integer minSpecialCharNum,
-                                     @Value("${password.minDigitNum}") Integer minDigitNum) {
+  public String signupRedirect(Model model) {
     model.addAttribute("minLen", minLen)
             .addAttribute("minUppercaseNum", minUppercaseNum)
             .addAttribute("minLowercaseNum", minLowercaseNum)

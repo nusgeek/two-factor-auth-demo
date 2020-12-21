@@ -26,14 +26,14 @@ public class SmsSender {
         long start = System.currentTimeMillis();
         int i = 0;
         while (i < 3) {
-            for (int j = 0; j < numbers.length; j++) {
+            for (String number : numbers) {
                 Message
-                    .creator(new PhoneNumber(numbers[j]), // to
-                            senderNumber, // from
-                            "Magic sms test---- to " + numbers[j] + new Date())
-    //                .setMediaUrl(
-    //                        Promoter.listOfOne(URI.create("https://www.w3schools.com/w3css/img_lights.jpg"))
-                    .create();
+                        .creator(new PhoneNumber(number), // to
+                                senderNumber, // from
+                                "Magic sms test---- to " + number + new Date())
+                        //                .setMediaUrl(
+                        //                        Promoter.listOfOne(URI.create("https://www.w3schools.com/w3css/img_lights.jpg"))
+                        .create();
             }
             i++;
         }
@@ -51,23 +51,23 @@ public class SmsSender {
         }
     }
 
-    /* unit test */
-    /* error handling */
-    /* if unsuccessful, */
-    private static void printStatusAsync() {
-        ListenableFuture<ResourceSet<Message>> future = Message.reader().readAsync();
-        Futures.addCallback(
-                future,
-                new FutureCallback<ResourceSet<Message>>() {
-                    public void onSuccess(ResourceSet<Message> messages) {
-                        for (Message message : messages) {
-                            System.out.println(message.getSid() + " : " + message.getStatus());
-                        }
-                    }
-                    public void onFailure(Throwable t) {
-                        System.out.println("Failed to get message status: " + t.getMessage());
-                    }
-                });
-    }
+//    /* unit test */
+//    /* error handling */
+//    /* if unsuccessful, */
+//    private static void printStatusAsync() {
+//        ListenableFuture<ResourceSet<Message>> future = Message.reader().readAsync();
+//        Futures.addCallback(
+//                future,
+//                new FutureCallback<ResourceSet<Message>>() {
+//                    public void onSuccess(ResourceSet<Message> messages) {
+//                        for (Message message : messages) {
+//                            System.out.println(message.getSid() + " : " + message.getStatus());
+//                        }
+//                    }
+//                    public void onFailure(Throwable t) {
+//                        System.out.println("Failed to get message status: " + t.getMessage());
+//                    }
+//                });
+//    }
 
 }
